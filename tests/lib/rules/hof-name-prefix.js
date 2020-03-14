@@ -9,7 +9,6 @@
 //------------------------------------------------------------------------------
 
 var rule = require("../../../lib/rules/hof-name-prefix"),
-
     RuleTester = require("eslint").RuleTester;
 
 
@@ -17,20 +16,22 @@ var rule = require("../../../lib/rules/hof-name-prefix"),
 // Tests
 //------------------------------------------------------------------------------
 
-var ruleTester = new RuleTester();
+var ruleTester = new RuleTester({ env: { es6: true } });
 ruleTester.run("hof-name-prefix", rule, {
-
     valid: [
-
-        // give me some code that won't trigger a warning
+        {
+            code: "function makeClickHandler() {return function() {}};",
+            options: ["make"]
+        }  
     ],
 
     invalid: [
         {
-            code: "function clickHandler() {return function() {}}",
+            code: "function clickHandler() {return function() {}};",
+            options: ["make"],
             errors: [{
-                message: "Fill me in.",
-                type: "Me too"
+                message: "Higher order functions name should start with make",
+                type: "Identifier"
             }]
         }
     ]
