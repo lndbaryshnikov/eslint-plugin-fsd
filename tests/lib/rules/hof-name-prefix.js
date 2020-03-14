@@ -1,6 +1,6 @@
 /**
- * @fileoverview Функции высшего порядка, возвращающие функции, следует именовать по шаблону make + .* + отглагольное существительное, где .* — опциональный, синтаксически корректный набор слов уточняющий предназначение функции.
- * @author timon-and-pumbaa
+ * @fileoverview Higher order functions name prefix 
+ * @author Leonid Baryshnikov
  */
 "use strict";
 
@@ -8,7 +8,7 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-var rule = require("../../../lib/rules/use-prefix-make-for-hof"),
+var rule = require("../../../lib/rules/hof-name-prefix"),
 
     RuleTester = require("eslint").RuleTester;
 
@@ -18,7 +18,7 @@ var rule = require("../../../lib/rules/use-prefix-make-for-hof"),
 //------------------------------------------------------------------------------
 
 var ruleTester = new RuleTester();
-ruleTester.run("use-prefix-make-for-hof", rule, {
+ruleTester.run("hof-name-prefix", rule, {
 
     valid: [
 
@@ -27,7 +27,7 @@ ruleTester.run("use-prefix-make-for-hof", rule, {
 
     invalid: [
         {
-            code: "function getButton() {return function() {}}",
+            code: "function clickHandler() {return function() {}}",
             errors: [{
                 message: "Fill me in.",
                 type: "Me too"
