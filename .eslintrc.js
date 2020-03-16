@@ -8,8 +8,8 @@ module.exports = {
     mocha: true,
   },
   extends: [
-    'airbnb-base',
     'eslint:recommended',
+    'airbnb-base',
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:import/typescript',
