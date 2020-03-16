@@ -7,7 +7,21 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
-export default {
+import { TSESTree } from '@typescript-eslint/experimental-utils';
+import { Rule } from 'eslint';
+
+type Functions =
+  | TSESTree.FunctionDeclaration
+  | TSESTree.FunctionExpression
+  | TSESTree.ArrowFunctionExpression;
+
+type AllowedAncestors =
+  | TSESTree.VariableDeclarator
+  | TSESTree.MethodDefinition
+  | TSESTree.AssignmentExpression
+  | TSESTree.Property;
+
+const rule: Rule.RuleModule = {
   meta: {
     type: 'layout',
     docs: {
@@ -15,13 +29,13 @@ export default {
       category: 'Stylistic Issues',
       recommended: false,
     },
-    fixable: null, // or "code" or "whitespace"
+    fixable: undefined, // or "code" or "whitespace"
     schema: [
       // fill in your schema
     ],
   },
 
-  create(context) {
+  create(context: Rule.RuleContext): Rule.RuleListener {
     // ERROR: can't pass tests when trying to pass options to rule...
     // const prefixRequired = context.options[0];
 
@@ -31,51 +45,59 @@ export default {
     // Helpers
     //----------------------------------------------------------------------
 
-    const reportIdentifier = identifier => {
+    const reportIdentifier = (identifier: TSESTree.Identifier): void => {
       context.report({
         node: identifier,
         message: `Higher order functions name should start with '${prefixRequired}'`,
       });
     };
 
-    const isFunctionHigherOrder = node => {
-      const functionContent = node.body.body;
+    const isFunctionHigherOrder = (node: Functions): boolean => {
+      if (!node.body) return false;
+
+      const functionBody = node.body as TSESTree.BlockStatement;
+      const { body: functionContent } = functionBody;
+
       const functionTypes = ['ArrowFunctionExpression', 'FunctionExpression'];
 
-      const statementThatReturnsFunction = functionContent.find(node => {
-        const nodeReturnsFunction =
-          node.type === 'ReturnStatement' &&
-          functionTypes.includes(node.argument.type);
+      const statementThatReturnsFunction = functionContent.find((contentNode: TSESTree.Node) => {
+          const nodeReturnsFunction =
+            contentNode.type === 'ReturnStatement' &&
+            contentNode.argument &&
+            functionTypes.includes(contentNode.argument.type);
 
-        if (nodeReturnsFunction) return true;
+          if (nodeReturnsFunction) return true;
 
-        return false;
+          return false;
       });
 
       return !!statementThatReturnsFunction;
     };
 
-    const getLastAncestor = node => {
-      const ancestors = context.getAncestors(node);
+    const getLastAncestor = (): TSESTree.Node => {
+      const ancestors = context.getAncestors();
+      const lastAncestor = ancestors[ancestors.length - 1];
 
-      return ancestors[ancestors.length - 1];
+      return lastAncestor as TSESTree.Node;
     };
 
-    const checkIdentifier = identifier => {
+    const checkIdentifier = (identifier: TSESTree.Identifier): void => {
       if (!identifier.name.startsWith(prefixRequired)) {
         reportIdentifier(identifier);
       }
     };
 
-    const getIdentifier = node => {
+    const getIdentifier = (node: AllowedAncestors): TSESTree.Identifier => {
       const ancestorIsMethodOrProperty =
         node.type === 'MethodDefinition' || node.type === 'Property';
 
       const mayBeLeftProperty =
-        node.type === 'AssignmentExpression' ? node.left.property : null;
+        node.type === 'AssignmentExpression'
+          ? (node as TSESTree.AssignmentExpression).left.property
+          : null;
 
       const mayBeKeyOrLeftProperty = ancestorIsMethodOrProperty
-        ? node.key
+        ? (node as TSESTree.MethodDefinition | TSESTree.MethodDefinition).key
         : mayBeLeftProperty;
 
       const identifier =
@@ -84,17 +106,21 @@ export default {
       return identifier;
     };
 
-    const checkFunctionDeclaration = node => {
+    const checkFunctionDeclaration = (
+      node: TSESTree.FunctionDeclaration,
+    ): void => {
       const functionIsHigherOrder = isFunctionHigherOrder(node);
 
       if (functionIsHigherOrder) {
         const identifier = node.id;
 
-        checkIdentifier(identifier);
+        checkIdentifier(identifier as TSESTree.Identifier);
       }
     };
 
-    const checkFunctionExpression = node => {
+    const checkFunctionExpression = (
+      node: TSESTree.FunctionExpression | TSESTree.ArrowFunctionExpression,
+    ): void => {
       const allowedAncestors = [
         'VariableDeclarator',
         'MethodDefinition',
@@ -102,7 +128,7 @@ export default {
         'Property',
       ];
 
-      const lastAncestor = getLastAncestor(node);
+      const lastAncestor = getLastAncestor() as AllowedAncestors;
       const functionIsHigherOrder = isFunctionHigherOrder(node);
 
       if (
@@ -126,3 +152,5 @@ export default {
     };
   },
 };
+
+export default rule;
