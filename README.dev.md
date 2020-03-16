@@ -105,15 +105,10 @@ To configure prettier - add this to **settings.json**
 "eslint.autoFixOnSave": true,
 "eslint.validate": [
   "javascript",
-  "javascriptreact",
   {
     "autoFix": true,
     "language": "typescript"
   },
-  {
-    "autoFix": true,
-    "language": "typescriptreact"
-  }
 ],
 "prettier.eslintIntegration": true,
 ```
