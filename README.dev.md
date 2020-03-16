@@ -60,6 +60,12 @@ npm run compile-tests
 npm run compile
 ```
 
+### Compile for production (with type checking)
+
+```bash
+npm run compile-prod
+```
+
 ## Git Workflow
 
 All work regarding new rules development should be done in separate branches.
