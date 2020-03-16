@@ -17,7 +17,7 @@
     "compile-rules": "babel src/lib --out-dir lib --extensions '.ts,.js'",
     "compile-tests": "babel src/tests --out-dir tests --extensions '.ts,.js'",
     "compile": "npm run clean && npm run compile-rules && npm run compile-tests",
-    "compile-prod": "npm run check-types && npm run compile"
+    "compile-prod": "npm run check-types && npm run lint && npm run compile"
   },
   "dependencies": {
     "@typescript-eslint/experimental-utils": "^2.23.0"
