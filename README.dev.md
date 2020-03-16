@@ -98,15 +98,7 @@ To configure prettier - add this to **settings.json**
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": false
 },
-"[javascriptreact]": {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": false
-},
 "[typescript]": {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": false
-},
-"[typescriptreact]": {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": false
 },
