@@ -7,12 +7,12 @@
 // Requirements
 //------------------------------------------------------------------------------
 
-import { RuleTester } from 'eslint';
+import { Rule, RuleTester } from 'eslint';
 import rule from '../../../lib/rules/hof-name-prefix';
 
 const errors = [
   {
-    message: "Higher order functions name should start with 'make'",
+    messageId: 'requireMake',
     type: 'Identifier',
   },
 ];
@@ -22,7 +22,7 @@ const errors = [
 //------------------------------------------------------------------------------
 
 const ruleTester = new RuleTester({ env: { es6: true } });
-ruleTester.run('hof-name-prefix', rule, {
+ruleTester.run('hof-name-prefix', rule as Rule.RuleModule, {
   valid: [
     // FunctionDeclaration
     'function makeA() {const a = 1; return function() {}};',

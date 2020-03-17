@@ -7,10 +7,10 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
-import { TSESTree } from '@typescript-eslint/experimental-utils';
+import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
 import { Rule } from 'eslint';
 
-type Functions =
+type Function =
   | TSESTree.FunctionDeclaration
   | TSESTree.FunctionExpression
   | TSESTree.ArrowFunctionExpression;
@@ -21,21 +21,28 @@ type AllowedAncestors =
   | TSESTree.AssignmentExpression
   | TSESTree.Property;
 
-const rule: Rule.RuleModule = {
+const rule: TSESLint.RuleModule<string, string[]> = {
   meta: {
     type: 'layout',
     docs: {
       description: 'Higher order functions name prefix',
       category: 'Stylistic Issues',
       recommended: false,
+      url:
+        'https://github.com/timon-and-pumbaa/eslint-plugin-fsd/blob/master/docs/rules/hof-name-prefix.md',
     },
     fixable: undefined, // or "code" or "whitespace"
     schema: [
       // fill in your schema
     ],
+    messages: {
+      requireMake: 'Higher order functions name should start with make',
+    },
   },
 
-  create(context: Rule.RuleContext): Rule.RuleListener {
+  create(
+    context: TSESLint.RuleContext<string, string[]>,
+  ): TSESLint.RuleListener {
     // ERROR: can't pass tests when trying to pass options to rule...
     // const prefixRequired = context.options[0];
 
@@ -48,11 +55,11 @@ const rule: Rule.RuleModule = {
     const reportIdentifier = (identifier: TSESTree.Identifier): void => {
       context.report({
         node: identifier,
-        message: `Higher order functions name should start with '${prefixRequired}'`,
+        messageId: 'requireMake',
       });
     };
 
-    const isFunctionHigherOrder = (node: Functions): boolean => {
+    const isFunctionHigherOrder = (node: Function): boolean => {
       if (!node.body) return false;
 
       const functionBody = node.body as TSESTree.BlockStatement;
@@ -60,7 +67,8 @@ const rule: Rule.RuleModule = {
 
       const functionTypes = ['ArrowFunctionExpression', 'FunctionExpression'];
 
-      const statementThatReturnsFunction = functionContent.find((contentNode: TSESTree.Node) => {
+      const statementThatReturnsFunction = functionContent.find(
+        (contentNode: TSESTree.Node) => {
           const nodeReturnsFunction =
             contentNode.type === 'ReturnStatement' &&
             contentNode.argument &&
@@ -69,7 +77,8 @@ const rule: Rule.RuleModule = {
           if (nodeReturnsFunction) return true;
 
           return false;
-      });
+        },
+      );
 
       return !!statementThatReturnsFunction;
     };
@@ -93,7 +102,7 @@ const rule: Rule.RuleModule = {
 
       const mayBeLeftProperty =
         node.type === 'AssignmentExpression'
-          ? (node as TSESTree.AssignmentExpression).left.property
+          ? (node.left as TSESTree.MemberExpression).property
           : null;
 
       const mayBeKeyOrLeftProperty = ancestorIsMethodOrProperty
@@ -103,7 +112,7 @@ const rule: Rule.RuleModule = {
       const identifier =
         node.type === 'VariableDeclarator' ? node.id : mayBeKeyOrLeftProperty;
 
-      return identifier;
+      return identifier as TSESTree.Identifier;
     };
 
     const checkFunctionDeclaration = (
