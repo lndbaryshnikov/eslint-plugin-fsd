@@ -40,4 +40,4 @@ Then configure the rules you want to use under the rules section.
 
 ## Supported Rules
 
-- Fill in provided rules here
+- [hof-name-prefix](https://github.com/timon-and-pumbaa/eslint-plugin-fsd/blob/master/docs/rules/hof-name-prefix.md)
