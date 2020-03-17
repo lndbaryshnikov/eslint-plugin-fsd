@@ -5,7 +5,7 @@
 
 import HOFNamePrefixRule from './rules/hof-name-prefix';
 
-export default {
+module.exports = {
   rules: {
     'hof-name-prefix': HOFNamePrefixRule,
   },

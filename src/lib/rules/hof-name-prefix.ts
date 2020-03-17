@@ -20,7 +20,7 @@ type AllowedAncestors =
   | TSESTree.AssignmentExpression
   | TSESTree.Property;
 
-const HOFNamePrefixRule: TSESLint.RuleModule<string, string[]> = {
+const rule: TSESLint.RuleModule<string, string[]> = {
   meta: {
     type: 'layout',
     docs: {
@@ -161,4 +161,4 @@ const HOFNamePrefixRule: TSESLint.RuleModule<string, string[]> = {
   },
 };
 
-export default HOFNamePrefixRule;
+export default rule;
