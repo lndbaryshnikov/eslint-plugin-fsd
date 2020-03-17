@@ -1,1 +1,9 @@
+# Common
 node_modules
+
+# IDE
+.vscode
+
+# Project
+/lib
+/tests
