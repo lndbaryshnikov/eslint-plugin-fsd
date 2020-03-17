@@ -6,5 +6,7 @@
 import HOFNamePrefixRule from './rules/hof-name-prefix';
 
 export default {
-  'hof-name-prefix': HOFNamePrefixRule,
+  rules: {
+    'hof-name-prefix': HOFNamePrefixRule,
+  },
 };
