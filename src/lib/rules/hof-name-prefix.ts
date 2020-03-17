@@ -8,7 +8,6 @@
 //------------------------------------------------------------------------------
 
 import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
-import { Rule } from 'eslint';
 
 type Function =
   | TSESTree.FunctionDeclaration
