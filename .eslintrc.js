@@ -5,7 +5,6 @@ module.exports = {
   env: {
     es6: true,
     node: true,
-    mocha: true,
   },
   extends: [
     'airbnb-base',
@@ -23,6 +22,21 @@ module.exports = {
     ecmaVersion: 10,
     sourceType: 'module',
   },
+  overrides: [
+    // Testing rules
+    {
+      files: ['src/tests/**/*.ts'],
+      env: {
+        mocha: true,
+      },
+      rules: {
+        'import/no-extraneous-dependencies': [
+          'error',
+          { devDependencies: true },
+        ],
+      },
+    },
+  ],
   rules: {
     'import/extensions': [
       'error',
