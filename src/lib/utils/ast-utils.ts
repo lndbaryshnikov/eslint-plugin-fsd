@@ -44,7 +44,7 @@ const getLastAncestor = <MessageIds extends string, TOptions extends unknown[]>(
   const ancestors = context.getAncestors();
   const lastAncestor = ancestors[ancestors.length - 1];
 
-  return lastAncestor as TSESTree.Node;
+  return lastAncestor;
 };
 
 export { isFunction, isFunctionHigherOrder, getLastAncestor };
