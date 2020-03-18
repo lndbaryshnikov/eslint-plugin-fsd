@@ -9,6 +9,11 @@
   ],
   "author": "timon-and-pumbaa",
   "main": "lib/index.js",
+  "files": [
+    "README.md",
+    "docs",
+    "lib"
+  ],
   "scripts": {
     "clean": "rimraf lib && rimraf tests",
     "test": "npm run compile && mocha tests --recursive",
