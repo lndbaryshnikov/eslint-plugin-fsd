@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 
 import { Rule, RuleTester } from 'eslint';
-import rule from '../../../lib/rules/hof-name-prefix';
+import HOFNamePrefixRule from '../../../lib/rules/hof-name-prefix';
 
 const errors = [
   {
@@ -22,7 +22,7 @@ const errors = [
 //------------------------------------------------------------------------------
 
 const ruleTester = new RuleTester({ env: { es6: true } });
-ruleTester.run('hof-name-prefix', rule as Rule.RuleModule, {
+ruleTester.run('hof-name-prefix', HOFNamePrefixRule as Rule.RuleModule, {
   valid: [
     // FunctionDeclaration
     'function makeA() {const a = 1; return function() {}};',

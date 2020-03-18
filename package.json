@@ -9,15 +9,21 @@
   ],
   "author": "timon-and-pumbaa",
   "main": "lib/index.js",
+  "files": [
+    "README.md",
+    "docs",
+    "lib"
+  ],
   "scripts": {
     "clean": "rimraf lib && rimraf tests",
     "test": "npm run compile && mocha tests --recursive",
-    "lint": "eslint './src/{lib,tests}/**/*' --ext .ts",
+    "lint": "eslint ./src/{lib,tests}/**/* --ext .ts",
+    "local-deploy": "npm run compile-prod && npm link",
     "check-types": "tsc",
     "compile-rules": "babel src/lib --out-dir lib --extensions .ts,.js",
     "compile-tests": "babel src/tests --out-dir tests --extensions .ts,.js",
     "compile": "npm run clean && npm run compile-rules && npm run compile-tests",
-    "compile-prod": "npm run check-types && npm run lint && npm run compile"
+    "compile-prod": "npm run check-types && npm run lint && npm run test"
   },
   "dependencies": {
     "@typescript-eslint/experimental-utils": "^2.23.0"
@@ -49,7 +55,7 @@
     "typescript": ">=3.4.1"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=10.19.0"
   },
   "license": "ISC"
 }
