@@ -1,6 +1,6 @@
 import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
 
-const name = 'split-conditinals';
+const name = 'split-conditionals';
 
 //
 // ─── HELPER FUNCTIONS ───────────────────────────────────────────────────────────
