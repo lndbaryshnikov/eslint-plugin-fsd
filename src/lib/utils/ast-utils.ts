@@ -16,9 +16,8 @@ const isFunctionHigherOrder = (node: Function): boolean => {
 
   const functionBody = node.body as TSESTree.BlockStatement | Function;
 
-  // Means function body with no braces
+  // When function body has no braces
   if (isFunction(functionBody)) return true;
-  // If function with no braces
   if (functionBody.type !== 'BlockStatement') return false;
 
   const { body: functionContent } = functionBody as TSESTree.BlockStatement;
