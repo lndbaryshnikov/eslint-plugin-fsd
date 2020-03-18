@@ -1,29 +1,44 @@
-import dedent from 'dedent';
-import { RuleTester } from 'eslint';
+import { TSESLint } from '@typescript-eslint/experimental-utils';
 
 import { name, rule } from '../../../lib/rules/split-conditionals';
+import { es6 } from '../../helpers/configs';
 
 //
-// ─── ERRORS DESCRIPTION ─────────────────────────────────────────────────────────
+// ─── ERROR DESCRIPTIONS ─────────────────────────────────────────────────────────
 //
 
-const errors: RuleTester.InvalidTestCase['errors'] = [
-  {
-    message:
-      'Все проверки содержащие более одного условия должны быть вынесены',
-  },
-];
+const tooManyConditions: TSESLint.TestCaseError<string> = {
+  messageId: 'tooManyConditions',
+};
 
 //
 // ─── VALID TEST SCENARIOS ──────────────────────────────────────────────────────
 //
 
-const valid: RuleTester.ValidTestCase[] = [
+const valid: TSESLint.ValidTestCase<[]>[] = [
   {
-    code: dedent`
-      if (this.isUpdateAllowedForUser(user, item)) {
-        this.update(item.data);
-      }
+    code: `
+      if (this.isUpdateAllowedForUser(user, item)) { }
+    `,
+  },
+  {
+    code: `
+      if (a === b) { }
+    `,
+  },
+  {
+    code: `
+      if (a && b) { }
+    `,
+  },
+  {
+    code: `
+      if (a || b) { }
+    `,
+  },
+  {
+    code: `
+      if (!a) { }
     `,
   },
 ];
@@ -32,20 +47,54 @@ const valid: RuleTester.ValidTestCase[] = [
 // ─── INVALID TEST SCENARIOS ─────────────────────────────────────────────────────
 //
 
-const invalid: RuleTester.InvalidTestCase[] = [
+const invalid: TSESLint.InvalidTestCase<string, []>[] = [
   {
-    code: dedent`
-      if ((user.isAdmin) || (user.role === item.owner)) {
-        this.update(item.data);
-      }
+    code: `
+      if ((user.isAdmin) && (user.role === item.owner)) { }
     `,
-    errors,
+    errors: [tooManyConditions],
+  },
+  {
+    code: `
+      if ((user.isAdmin) || (user.role === item.owner)) { }
+    `,
+    errors: [tooManyConditions],
+  },
+  {
+    code: `
+      if (a === b || c !== d) { }
+    `,
+    errors: [tooManyConditions],
+  },
+  {
+    code: `
+      if (a === b || c in d) { }
+    `,
+    errors: [tooManyConditions],
+  },
+  {
+    code: `
+      if (myList.includes(a) && b > c) { }
+    `,
+    errors: [tooManyConditions],
+  },
+  {
+    code: `
+      if (a < b && b > d && d != 0) { }
+    `,
+    errors: [tooManyConditions, tooManyConditions],
+  },
+  {
+    code: `
+      if ({}.prototype.hasOwnProperty('x', a) && a.length > 0) { }
+    `,
+    errors: [tooManyConditions],
   },
 ];
 
-const ruleTester = new RuleTester({ env: { es6: true } });
+const es6RuleTester = new TSESLint.RuleTester(es6);
 
-ruleTester.run(name, rule, {
+es6RuleTester.run(name, rule, {
   valid,
   invalid,
 });
