@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "clean": "rimraf lib && rimraf tests",
-    "test": "npm run compile && mocha tests --recursive",
+    "test": "npm run compile && mocha ./tests/lib/rules/**/*$MATCH*.js",
     "lint": "eslint ./src/{lib,tests}/**/* --ext .ts",
     "local-deploy": "npm run compile-prod && npm link",
     "check-types": "tsc",
