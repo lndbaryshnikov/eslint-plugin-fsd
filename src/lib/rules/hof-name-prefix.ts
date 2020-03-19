@@ -9,13 +9,18 @@
 
 import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
 
-import { isFunctionHigherOrder, getLastAncestor } from '../utils/ast-utils';
+import { isFunction, getLastAncestor } from '../utils/ast-utils';
 
 type AllowedAncestors =
   | TSESTree.VariableDeclarator
   | TSESTree.MethodDefinition
   | TSESTree.AssignmentExpression
   | TSESTree.Property;
+
+type Function =
+  | TSESTree.FunctionDeclaration
+  | TSESTree.FunctionExpression
+  | TSESTree.ArrowFunctionExpression;
 
 const rule: TSESLint.RuleModule<string, string[]> = {
   meta: {
@@ -76,6 +81,33 @@ const rule: TSESLint.RuleModule<string, string[]> = {
         node.type === 'VariableDeclarator' ? node.id : mayBeKeyOrLeftProperty;
 
       return identifier as TSESTree.Identifier;
+    };
+
+    const isFunctionHigherOrder = (node: Function): boolean => {
+      if (!node.body) return false;
+
+      const functionBody = node.body as TSESTree.BlockStatement | Function;
+
+      // When function body has no braces
+      if (isFunction(functionBody)) return true;
+      if (functionBody.type !== 'BlockStatement') return false;
+
+      const { body: functionContent } = functionBody as TSESTree.BlockStatement;
+
+      const statementThatReturnsFunction = functionContent.find(
+        (contentNode: TSESTree.Node) => {
+          const nodeReturnsFunction =
+            contentNode.type === 'ReturnStatement' &&
+            contentNode.argument &&
+            isFunction(contentNode.argument);
+
+          if (nodeReturnsFunction) return true;
+
+          return false;
+        },
+      );
+
+      return !!statementThatReturnsFunction;
     };
 
     const checkFunctionDeclaration = (
