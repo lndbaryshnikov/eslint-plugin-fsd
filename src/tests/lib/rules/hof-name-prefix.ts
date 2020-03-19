@@ -47,6 +47,8 @@ ruleTester.run('hof-name-prefix', HOFNamePrefixRule as Rule.RuleModule, {
     'const makeA = function() {return () => {}};',
     // When there are another nodes in returning function BlockStatement
     'const makeA = () => {const b = 1; if (b === 1) {b += 1} return function() {}};',
+    // When ArrowFunctionExpression has no braces
+    'const makeA = () => () => {}',
   ],
 
   invalid: [
@@ -75,6 +77,11 @@ ruleTester.run('hof-name-prefix', HOFNamePrefixRule as Rule.RuleModule, {
     {
       code:
         'const x = () => {const b = 1; if (b === 1) {b += 1} return function() {}};',
+      errors,
+    },
+    // When ArrowFunctionExpression has no braces
+    {
+      code: 'const x = () => () => {}',
       errors,
     },
   ],
