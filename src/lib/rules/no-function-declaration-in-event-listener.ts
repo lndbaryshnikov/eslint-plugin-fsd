@@ -29,7 +29,8 @@ const rule: TSESLint.RuleModule<string, string[]> = {
       'CallExpression > MemberExpression > Identifier.property[name="addEventListener"]': function(
         node: TSESTree.Identifier,
       ): void {
-        const callExpression = node.parent?.parent as TSESTree.CallExpression;
+        const memberExpression = node.parent as TSESTree.MemberExpression;
+        const callExpression = memberExpression.parent as TSESTree.CallExpression;
         const secondArg = callExpression.arguments[1];
 
         if (isFunction(secondArg)) {
