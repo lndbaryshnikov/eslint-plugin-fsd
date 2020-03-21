@@ -1,15 +1,11 @@
 import { TSESLint } from '@typescript-eslint/experimental-utils';
 
-import { name, rule } from '../../../lib/rules/jq-use-js-prefix-in-selector';
+import {
+  name,
+  rule,
+  errorMessages,
+} from '../../../lib/rules/jq-use-js-prefix-in-selector';
 import { es6 } from '../../helpers/configs';
-
-//
-// ─── ERROR DESCRIPTIONS ─────────────────────────────────────────────────────────
-//
-
-const useJsPrefix: TSESLint.TestCaseError<string> = {
-  messageId: 'useJsPrefix',
-};
 
 //
 // ─── VALID TEST SCENARIOS ──────────────────────────────────────────────────────
@@ -42,30 +38,46 @@ const valid: TSESLint.ValidTestCase<[]>[] = [
 // ─── INVALID TEST SCENARIOS ─────────────────────────────────────────────────────
 //
 
-const invalid: TSESLint.InvalidTestCase<string, []>[] = [
+const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
   {
     code: `
       $('.open-popup-button').click();
     `,
-    errors: [useJsPrefix],
+    errors: [
+      {
+        messageId: 'useJsPrefix',
+      },
+    ],
   },
   {
     code: `
       jQuery('.open-popup-button').click();
     `,
-    errors: [useJsPrefix],
+    errors: [
+      {
+        messageId: 'useJsPrefix',
+      },
+    ],
   },
   {
     code: `
       $('.js-wrapper .open-popup-button').click();
     `,
-    errors: [useJsPrefix],
+    errors: [
+      {
+        messageId: 'useJsPrefix',
+      },
+    ],
   },
   {
     code: `
       $('.js-wrapper .js-open-popup-button, #container > .wrapper').click();
     `,
-    errors: [useJsPrefix],
+    errors: [
+      {
+        messageId: 'useJsPrefix',
+      },
+    ],
   },
 ];
 

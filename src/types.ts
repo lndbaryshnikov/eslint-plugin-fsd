@@ -1,8 +1,9 @@
 import { TSESLint } from '@typescript-eslint/experimental-utils';
 
-export type BaseOptions = object;
+// "url" will be set automatically.
+export type RuleMetaDataDocs = Omit<TSESLint.RuleMetaDataDocs, 'url'>;
 
-export type RuleContext<
-  MessageIds extends string,
-  Options extends BaseOptions
-> = TSESLint.RuleContext<MessageIds, readonly [Options]>;
+// "docs.url" will be set automatically.
+export type RuleMetaData<MessageIds extends string> = {
+  readonly docs: RuleMetaDataDocs;
+} & Omit<TSESLint.RuleMetaData<MessageIds>, 'docs'>;

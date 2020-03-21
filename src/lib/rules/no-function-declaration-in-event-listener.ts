@@ -1,32 +1,45 @@
-import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
+import { TSESTree, ESLintUtils } from '@typescript-eslint/experimental-utils';
+
+import { RuleMetaData } from '../../types';
 
 import { isFunction } from '../utils/ast-utils';
 
+//
+// ─── RULE DECLARATIONS ──────────────────────────────────────────────────────────
+//
+
 const name = 'no-function-declaration-in-event-listener';
 
-//
-// ─── RULE DESCRIPTION ───────────────────────────────────────────────────────────
-//
+const createRule = ESLintUtils.RuleCreator(
+  () =>
+    'https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/goodPractice.md',
+);
 
-const rule: TSESLint.RuleModule<string, string[]> = {
-  meta: {
-    type: 'suggestion',
-    docs: {
-      category: 'Best Practices',
-      description: 'Выносить обработчики событий в отдельные функции',
-      url:
-        'https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/goodPractice.md',
-      recommended: false,
-    },
-    messages: {
-      functionForEventListener:
-        'Выносить обработчики событий в отдельные функции',
-    },
-    schema: [],
+const errorMessages = {
+  functionForEventListener: 'Выносить обработчики событий в отдельные функции',
+} as const;
+
+const meta: RuleMetaData<keyof typeof errorMessages> = {
+  type: 'suggestion',
+  docs: {
+    category: 'Best Practices',
+    description: 'Выносить обработчики событий в отдельные функции',
+    recommended: false,
   },
+  messages: errorMessages,
+  schema: [],
+};
+
+const addEventListenerSelector =
+  'CallExpression > MemberExpression > Identifier.property[name="addEventListener"]';
+
+const rule = createRule({
+  name,
+  meta,
+  defaultOptions: [],
   create(context) {
     return {
-      'CallExpression > MemberExpression > Identifier.property[name="addEventListener"]': function(
+      [addEventListenerSelector]: function checkEventListener(
         node: TSESTree.Identifier,
       ): void {
         const memberExpression = node.parent as TSESTree.MemberExpression;
@@ -42,6 +55,6 @@ const rule: TSESLint.RuleModule<string, string[]> = {
       },
     };
   },
-};
+});
 
-export { name, rule };
+export { name, rule, errorMessages };

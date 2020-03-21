@@ -3,16 +3,9 @@ import { TSESLint } from '@typescript-eslint/experimental-utils';
 import {
   name,
   rule,
+  errorMessages,
 } from '../../../lib/rules/no-function-declaration-in-event-listener';
 import { es6 } from '../../helpers/configs';
-
-//
-// ─── ERROR DESCRIPTIONS ─────────────────────────────────────────────────────────
-//
-
-const functionForEventListener: TSESLint.TestCaseError<string> = {
-  messageId: 'functionForEventListener',
-};
 
 //
 // ─── VALID TEST SCENARIOS ──────────────────────────────────────────────────────
@@ -43,30 +36,46 @@ const valid: TSESLint.ValidTestCase<[]>[] = [
 // ─── INVALID TEST SCENARIOS ─────────────────────────────────────────────────────
 //
 
-const invalid: TSESLint.InvalidTestCase<string, []>[] = [
+const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
   {
     code: `
       elem.addEventListener( "click" , function() {alert('Спасибо!')});
     `,
-    errors: [functionForEventListener],
+    errors: [
+      {
+        messageId: 'functionForEventListener',
+      },
+    ],
   },
   {
     code: `
       elem.addEventListener( "click" , function mySuperHandler() {alert('super')});
     `,
-    errors: [functionForEventListener],
+    errors: [
+      {
+        messageId: 'functionForEventListener',
+      },
+    ],
   },
   {
     code: `
       elem.addEventListener( "click" , e => someHandler(e));
     `,
-    errors: [functionForEventListener],
+    errors: [
+      {
+        messageId: 'functionForEventListener',
+      },
+    ],
   },
   {
     code: `
       elem.addEventListener( "click" , () => null);
     `,
-    errors: [functionForEventListener],
+    errors: [
+      {
+        messageId: 'functionForEventListener',
+      },
+    ],
   },
 ];
 

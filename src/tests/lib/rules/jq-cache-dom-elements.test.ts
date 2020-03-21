@@ -1,15 +1,11 @@
 import { TSESLint } from '@typescript-eslint/experimental-utils';
 
-import { name, rule } from '../../../lib/rules/jq-cache-dom-elements';
+import {
+  name,
+  rule,
+  errorMessages,
+} from '../../../lib/rules/jq-cache-dom-elements';
 import { es6 } from '../../helpers/configs';
-
-//
-// ─── ERROR DESCRIPTIONS ─────────────────────────────────────────────────────────
-//
-
-const cacheDOMNodes: TSESLint.TestCaseError<string> = {
-  messageId: 'cacheDOMNodes',
-};
 
 //
 // ─── VALID TEST SCENARIOS ──────────────────────────────────────────────────────
@@ -30,14 +26,18 @@ const valid: TSESLint.ValidTestCase<[]>[] = [
 // ─── INVALID TEST SCENARIOS ─────────────────────────────────────────────────────
 //
 
-const invalid: TSESLint.InvalidTestCase<string, []>[] = [
+const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
   {
     code: `
       $('.js-element').show();
       $('.js-element').find('.js-children').doSomething();
       $('.js-element').attr('data-id', 123);
     `,
-    errors: [cacheDOMNodes],
+    errors: [
+      {
+        messageId: 'cacheDOMNodes',
+      },
+    ],
   },
 ];
 

@@ -1,10 +1,10 @@
 import {
   TSESTree,
-  TSESLint,
   AST_NODE_TYPES,
+  ESLintUtils,
 } from '@typescript-eslint/experimental-utils';
 
-const name = 'jq-use-js-prefix-in-selector';
+import { RuleMetaData } from '../../types';
 
 //
 // ─── HELPER FUNCTIONS ───────────────────────────────────────────────────────────
@@ -32,31 +32,45 @@ function isCorrectSelector(selector = ''): boolean {
 }
 
 //
-// ─── RULE DESCRIPTION ───────────────────────────────────────────────────────────
+// ─── RULE DECLARATIONS ──────────────────────────────────────────────────────────
 //
 
-const rule: TSESLint.RuleModule<string, string[]> = {
-  meta: {
-    type: 'suggestion',
-    docs: {
-      category: 'Best Practices',
-      description:
-        'Все классы, которые используем для поиска по DOM-у должны начинаться с префикса js-',
-      url:
-        'https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/jQuery.md',
-      recommended: false,
-    },
-    messages: {
-      useJsPrefix:
-        'Все классы, которые используем для поиска по DOM-у должны начинаться с префикса js-',
-    },
-    schema: [],
+const name = 'jq-use-js-prefix-in-selector';
+
+const createRule = ESLintUtils.RuleCreator(
+  () =>
+    `https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/jQuery.md`,
+);
+
+const errorMessages = {
+  useJsPrefix:
+    'Все классы, которые используем для поиска по DOM-у должны начинаться с префикса js-',
+} as const;
+
+const meta: RuleMetaData<keyof typeof errorMessages> = {
+  type: 'suggestion',
+  docs: {
+    category: 'Best Practices',
+    description:
+      'Все классы, которые используем для поиска по DOM-у должны начинаться с префикса js-',
+    recommended: false,
   },
+  messages: errorMessages,
+  schema: [],
+};
+
+const jqDOMSelector =
+  'MemberExpression > CallExpression > Identifier.callee[name=/\\$|(jQuery)/]';
+
+const rule = createRule({
+  name,
+  meta,
+  defaultOptions: [],
   create(context) {
     return {
-      'MemberExpression > CallExpression > Identifier.callee[name=/\\$|(jQuery)/]': function(
+      [jqDOMSelector]: function checkDOMSelector(
         node: TSESTree.Identifier,
-      ) {
+      ): void {
         const callExpression = node.parent as TSESTree.CallExpression;
         const firstArg = callExpression.arguments[0];
 
@@ -74,6 +88,6 @@ const rule: TSESLint.RuleModule<string, string[]> = {
       },
     };
   },
-};
+});
 
-export { name, rule };
+export { name, rule, errorMessages };

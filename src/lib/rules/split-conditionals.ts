@@ -1,6 +1,6 @@
-import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
+import { TSESTree, ESLintUtils } from '@typescript-eslint/experimental-utils';
 
-const name = 'split-conditionals';
+import { RuleMetaData } from '../../types';
 
 //
 // ─── HELPER FUNCTIONS ───────────────────────────────────────────────────────────
@@ -15,29 +15,40 @@ function hasMoreThen1Condition(node: TSESTree.LogicalExpression): boolean {
 }
 
 //
-// ─── RULE DESCRIPTION ───────────────────────────────────────────────────────────
+// ─── RULE DECLARATIONS ──────────────────────────────────────────────────────────
 //
 
-const rule: TSESLint.RuleModule<string, string[]> = {
-  meta: {
-    type: 'suggestion',
-    docs: {
-      category: 'Best Practices',
-      description:
-        'Все проверки содержащие более одного условия должны быть вынесены',
-      url:
-        'https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/goodPractice.md',
-      recommended: false,
-    },
-    messages: {
-      tooManyConditions:
-        'Все проверки содержащие более одного условия должны быть вынесены',
-    },
-    schema: [],
+const name = 'split-conditionals';
+
+const createRule = ESLintUtils.RuleCreator(
+  () =>
+    'https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/goodPractice.md',
+);
+
+const errorMessages = {
+  tooManyConditions:
+    'Все проверки содержащие более одного условия должны быть вынесены',
+} as const;
+
+const meta: RuleMetaData<keyof typeof errorMessages> = {
+  type: 'suggestion',
+  docs: {
+    category: 'Best Practices',
+    description:
+      'Все проверки содержащие более одного условия должны быть вынесены',
+    recommended: false,
   },
+  messages: errorMessages,
+  schema: [],
+};
+
+const rule = createRule({
+  name,
+  meta,
+  defaultOptions: [],
   create(context) {
     return {
-      LogicalExpression(node): void {
+      LogicalExpression: function checkLogicalExpression(node): void {
         if (hasMoreThen1Condition(node)) {
           context.report({
             node,
@@ -47,6 +58,6 @@ const rule: TSESLint.RuleModule<string, string[]> = {
       },
     };
   },
-};
+});
 
-export { name, rule };
+export { name, rule, errorMessages };

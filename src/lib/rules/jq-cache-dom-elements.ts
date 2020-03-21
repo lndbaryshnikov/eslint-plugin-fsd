@@ -1,36 +1,50 @@
 import {
   TSESTree,
-  TSESLint,
+  ESLintUtils,
   AST_NODE_TYPES,
 } from '@typescript-eslint/experimental-utils';
 
+import { RuleMetaData } from '../../types';
+
+//
+// ─── RULE DECLARATIONS ──────────────────────────────────────────────────────────
+//
+
 const name = 'jq-cache-dom-elements';
 
-//
-// ─── RULE DESCRIPTION ───────────────────────────────────────────────────────────
-//
+const createRule = ESLintUtils.RuleCreator(
+  () =>
+    'https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/jQuery.md',
+);
 
-const rule: TSESLint.RuleModule<string, string[]> = {
-  meta: {
-    type: 'suggestion',
-    docs: {
-      category: 'Best Practices',
-      description: 'Кэшировать все найденные элементы',
-      url:
-        'https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/jQuery.md',
-      recommended: false,
-    },
-    messages: {
-      cacheDOMNodes:
-        'Cache selected DOM nodes. This DOM node was selected {{ times }} times',
-    },
-    schema: [],
+const errorMessages = {
+  cacheDOMNodes:
+    'Cache selected DOM nodes. This DOM node was selected {{ times }} times',
+} as const;
+
+const meta: RuleMetaData<keyof typeof errorMessages> = {
+  type: 'suggestion',
+  docs: {
+    category: 'Best Practices',
+    description: 'Кэшировать все найденные элементы',
+    recommended: false,
   },
+  messages: errorMessages,
+  schema: [],
+};
+
+const jqDOMSelector =
+  'MemberExpression > CallExpression > Identifier.callee[name=/\\$|(jQuery)/]';
+
+const rule = createRule({
+  name,
+  meta,
+  defaultOptions: [],
   create(context) {
     const foundSelectors: Map<string, TSESTree.Node[]> = new Map();
 
     return {
-      'MemberExpression > CallExpression > Identifier.callee[name=/\\$|(jQuery)/]': function findRepeatedDOMSelections(
+      [jqDOMSelector]: function checkDOMSelector(
         node: TSESTree.Identifier,
       ): void {
         const callExpression = node.parent as TSESTree.CallExpression;
@@ -62,6 +76,6 @@ const rule: TSESLint.RuleModule<string, string[]> = {
       },
     };
   },
-};
+});
 
-export { name, rule };
+export { name, rule, errorMessages };
