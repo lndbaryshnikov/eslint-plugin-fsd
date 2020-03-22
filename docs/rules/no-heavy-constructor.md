@@ -1,36 +1,33 @@
 # No heavy constructor (no-heavy-constructor)
 
-Please describe the origin of the rule here.
-
+This rule prohibits searching the DOM tree and defining handlers in the constructor. If you implement such functionality, you should put it in a separate method.
 
 ## Rule Details
-
-This rule aims to...
 
 Examples of **incorrect** code for this rule:
 
 ```js
+/* eslint no-heavy-constructor: "error" */
 
-// fill me in
-
+class Button {
+  constructor(button) {
+    button.addEventListener('click', this.handleStopButtonClick);
+  }
+}
 ```
 
 Examples of **correct** code for this rule:
 
 ```js
+/* eslint no-heavy-constructor: "error" */
 
-// fill me in
+class Button {
+  constructor(button) {
+    this.button = button;
+  }
 
+  bindEventListeners() {
+     this.button.addEventListener('click', this.handleStopButtonClick);
+   }
+}
 ```
-
-### Options
-
-If there are any options, describe them here. Otherwise, delete this section.
-
-## When Not To Use It
-
-Give a short description of when it would be appropriate to turn off this rule.
-
-## Further Reading
-
-If there are other links that describe the issue this rule addresses, please include them here in a bulleted list.
