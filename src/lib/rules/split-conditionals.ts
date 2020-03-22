@@ -27,7 +27,7 @@ const createRule = ESLintUtils.RuleCreator(
 
 const errorMessages = {
   tooManyConditions:
-    'Все проверки содержащие более одного условия должны быть вынесены',
+    'All checks containing more than one condition must be separated',
 } as const;
 
 const meta: RuleMetaData<keyof typeof errorMessages> = {
@@ -35,7 +35,7 @@ const meta: RuleMetaData<keyof typeof errorMessages> = {
   docs: {
     category: 'Best Practices',
     description:
-      'Все проверки содержащие более одного условия должны быть вынесены',
+      'All checks containing more than one condition must be separated',
     recommended: false,
   },
   messages: errorMessages,

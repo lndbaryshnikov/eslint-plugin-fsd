@@ -26,7 +26,7 @@ const meta: RuleMetaData<keyof typeof errorMessages> = {
   type: 'suggestion',
   docs: {
     category: 'Best Practices',
-    description: 'Кэшировать все найденные элементы',
+    description: 'Cache all selected DOM elements',
     recommended: false,
   },
   messages: errorMessages,

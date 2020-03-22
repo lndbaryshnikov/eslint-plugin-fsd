@@ -16,14 +16,14 @@ const createRule = ESLintUtils.RuleCreator(
 );
 
 const errorMessages = {
-  functionForEventListener: 'Выносить обработчики событий в отдельные функции',
+  functionForEventListener: 'Move event handlers to separate functions',
 } as const;
 
 const meta: RuleMetaData<keyof typeof errorMessages> = {
   type: 'suggestion',
   docs: {
     category: 'Best Practices',
-    description: 'Выносить обработчики событий в отдельные функции',
+    description: 'Move event handlers to separate functions',
     recommended: false,
   },
   messages: errorMessages,
