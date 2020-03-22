@@ -3,10 +3,7 @@
  * @author timon-and-pumbaa
  */
 
-import HOFNamePrefixRule from './rules/hof-name-prefix';
+import requireIndex from 'requireindex';
 
-module.exports = {
-  rules: {
-    'hof-name-prefix': HOFNamePrefixRule,
-  },
-};
+// import all rules in lib/rules
+module.exports.rules = requireIndex(`${__dirname}/rules`);

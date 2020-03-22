@@ -24,7 +24,8 @@
     "compile-prod": "npm run check-types && npm run lint && npm run test && npm run compile"
   },
   "dependencies": {
-    "@typescript-eslint/experimental-utils": "^2.23.0"
+    "@typescript-eslint/experimental-utils": "^2.23.0",
+    "requireindex": "^1.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -35,6 +36,7 @@
     "@types/estree": "0.0.42",
     "@types/jest": "^25.1.4",
     "@types/node": "^13.9.1",
+    "@types/requireindex": "^1.2.0",
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.23.0",
     "babel-jest": "^25.1.0",
