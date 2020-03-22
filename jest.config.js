@@ -6,4 +6,5 @@ module.exports = {
   },
   testRegex: '\\.test\\.[jt]sx?$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  testEnvironment: 'node',
 };
