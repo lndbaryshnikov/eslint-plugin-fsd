@@ -13,28 +13,33 @@ import { es6 } from '../../helpers/configs';
 
 const valid: TSESLint.ValidTestCase<[]>[] = [
   {
+    // function invocation
+    code: `
+      if (isUpdateAllowedForUser(user, item)) { }
+    `,
+  },
+  {
+    // method invocation
     code: `
       if (this.isUpdateAllowedForUser(user, item)) { }
     `,
   },
   {
+    // binary conditional
     code: `
       if (a === b) { }
     `,
   },
   {
-    code: `
-      if (a && b) { }
-    `,
-  },
-  {
-    code: `
-      if (a || b) { }
-    `,
-  },
-  {
+    // unary conditional
     code: `
       if (!a) { }
+    `,
+  },
+  {
+    // skip assignment expressions
+    code: `
+      var isUserDefined = user && user.id !== null;
     `,
   },
 ];
@@ -45,6 +50,7 @@ const valid: TSESLint.ValidTestCase<[]>[] = [
 
 const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
   {
+    // if clause with 2 conditions
     code: `
       if ((user.isAdmin) && (user.role === item.owner)) { }
     `,
@@ -55,8 +61,23 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // if clause with 3 conditions
     code: `
-      if ((user.isAdmin) || (user.role === item.owner)) { }
+      if ((user.isAdmin) && (user.role === item.owner) || !user.id) { }
+    `,
+    errors: [
+      {
+        messageId: 'tooManyConditions',
+      },
+      {
+        messageId: 'tooManyConditions',
+      },
+    ],
+  },
+  {
+    // while clause with 2 conditions
+    code: `
+      while ((user.isAdmin) || (user.role === item.owner)) { }
     `,
     errors: [
       {
@@ -65,8 +86,9 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // for loop with 2 conditions
     code: `
-      if (a === b || c !== d) { }
+      for (let i = 0; i < list.length || i <= 100; i += 1) { }
     `,
     errors: [
       {
@@ -75,41 +97,9 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // use 'in' operator
     code: `
       if (a === b || c in d) { }
-    `,
-    errors: [
-      {
-        messageId: 'tooManyConditions',
-      },
-    ],
-  },
-  {
-    code: `
-      if (myList.includes(a) && b > c) { }
-    `,
-    errors: [
-      {
-        messageId: 'tooManyConditions',
-      },
-    ],
-  },
-  {
-    code: `
-      if (a < b && b > d && d != 0) { }
-    `,
-    errors: [
-      {
-        messageId: 'tooManyConditions',
-      },
-      {
-        messageId: 'tooManyConditions',
-      },
-    ],
-  },
-  {
-    code: `
-      if ({}.prototype.hasOwnProperty('x', a) && a.length > 0) { }
     `,
     errors: [
       {

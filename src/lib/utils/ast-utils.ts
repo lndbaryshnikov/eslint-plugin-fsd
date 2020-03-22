@@ -1,4 +1,8 @@
-import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
+import {
+  TSESTree,
+  TSESLint,
+  AST_NODE_TYPES,
+} from '@typescript-eslint/experimental-utils';
 
 const isFunction = (node: TSESTree.Node): boolean => {
   const anyFunctionPattern = /^(?:Function(?:Declaration|Expression)|ArrowFunctionExpression)$/u;
@@ -15,4 +19,33 @@ const getLastAncestor = <MessageIds extends string, TOptions extends unknown[]>(
   return lastAncestor;
 };
 
-export { isFunction, getLastAncestor };
+/**
+ * Check if provided node is a VariableDeclaration
+ * @param node any ast node
+ */
+function isVariableDeclaration(
+  node: TSESTree.Node,
+): node is TSESTree.VariableDeclaration {
+  return node.type === AST_NODE_TYPES.VariableDeclaration;
+}
+
+/**
+ * Return the first ancestor that meets the given check criteria.
+ */
+function getAncestorOfType<T extends TSESTree.Node>(
+  checker: (node: TSESTree.Node) => node is T,
+  node: TSESTree.Node,
+): T | null {
+  if (checker(node)) return node;
+
+  if (!node.parent) return null;
+
+  return getAncestorOfType(checker, node.parent);
+}
+
+export {
+  isFunction,
+  getLastAncestor,
+  isVariableDeclaration,
+  getAncestorOfType,
+};

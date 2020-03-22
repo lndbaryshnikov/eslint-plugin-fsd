@@ -2,6 +2,8 @@ import { TSESTree, ESLintUtils } from '@typescript-eslint/experimental-utils';
 
 import { RuleMetaData } from '../../types';
 
+import { isVariableDeclaration, getAncestorOfType } from '../utils/ast-utils';
+
 //
 // ─── HELPER FUNCTIONS ───────────────────────────────────────────────────────────
 //
@@ -12,6 +14,17 @@ function hasMoreThen1Condition(node: TSESTree.LogicalExpression): boolean {
   return Boolean(
     notAllowed.includes(node.left.type) || notAllowed.includes(node.right.type),
   );
+}
+
+function isInsideVariableDeclaration(
+  node: TSESTree.LogicalExpression,
+): boolean {
+  const variableDeclaration = getAncestorOfType<TSESTree.VariableDeclaration>(
+    isVariableDeclaration,
+    node,
+  );
+
+  return !!variableDeclaration;
 }
 
 //
@@ -49,6 +62,10 @@ const rule = createRule({
   create(context) {
     return {
       LogicalExpression: function checkLogicalExpression(node): void {
+        if (isInsideVariableDeclaration(node)) {
+          return;
+        }
+
         if (hasMoreThen1Condition(node)) {
           context.report({
             node,
