@@ -4,6 +4,12 @@ This rule enforces the use of `make` prefix in higher order function names (func
 
 ## Rule Details
 
+Rule number **10** from the FSD [Frontend best practices](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/functionsNaming.md):
+
+>Higher-order functions that return functions should be named after the template make + '.\*' + a verb noun, where '.\*' is an optional, syntactically correct set of words specifying the purpose of the function.
+
+Example: makeButtonClickHandler.
+
 Examples of **incorrect** code for this rule:
 
 ```js
