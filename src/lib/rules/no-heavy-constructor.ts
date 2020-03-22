@@ -9,6 +9,11 @@
 
 import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
 
+import {
+  isHtmlEventIdentifier,
+  isListenerMethodIdentifier,
+} from '../utils/ast-utils';
+
 const rule: TSESLint.RuleModule<string, string[]> = {
   meta: {
     type: 'layout',
@@ -21,7 +26,10 @@ const rule: TSESLint.RuleModule<string, string[]> = {
     },
     fixable: undefined,
     schema: [],
-    messages: {},
+    messages: {
+      heavyConstructor:
+        "Constructor shouldn't search the DOM and define handlers",
+    },
   },
 
   create(
@@ -31,11 +39,35 @@ const rule: TSESLint.RuleModule<string, string[]> = {
     // Helpers
     //----------------------------------------------------------------------
 
+    const reportIdentifier = (identifier: TSESTree.Identifier): void => {
+      context.report({
+        node: identifier,
+        messageId: 'heavyConstructor',
+      });
+    };
+
+    const checkForEventAttributes = (identifier: TSESTree.Identifier): void => {
+      if (isHtmlEventIdentifier(identifier)) {
+        reportIdentifier(identifier);
+      }
+    };
+
+    const checkForListenersMethods = (
+      identifier: TSESTree.Identifier,
+    ): void => {
+      if (isListenerMethodIdentifier(identifier)) {
+        reportIdentifier(identifier);
+      }
+    };
+
     //----------------------------------------------------------------------
     // Public
     //----------------------------------------------------------------------
 
-    return {};
+    return {
+      'ClassDeclaration MethodDefinition[key.name="constructor"] MemberExpression.left Identifier.property[name]': checkForEventAttributes,
+      'ClassDeclaration MethodDefinition[key.name="constructor"] MemberExpression.callee Identifier.property[name]': checkForListenersMethods,
+    };
   },
 };
 
