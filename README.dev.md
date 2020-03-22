@@ -34,6 +34,9 @@ npm run check-types
 
 ```bash
 npm test
+
+# Run files that match pattern
+MATCH=specific-file-name npm test
 ```
 
 ### Linting source files
@@ -94,21 +97,18 @@ git push origin --delete new-super-eslint-rule
 To configure prettier - add this to **settings.json**
 
 ```javascript
-"[javascript]": {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": false
-},
-"[typescript]": {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": false
-},
-"eslint.autoFixOnSave": true,
-"eslint.validate": [
-  "javascript",
-  {
-    "autoFix": true,
-    "language": "typescript"
+{
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
   },
-],
-"prettier.eslintIntegration": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+  },
+  "eslint.validate": ["javascript", "typescript"],
+  "prettier-eslint.eslintIntegration": true,
 ```

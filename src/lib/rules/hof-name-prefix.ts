@@ -8,18 +8,19 @@
 //------------------------------------------------------------------------------
 
 import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
-import { Rule } from 'eslint';
 
-type Function =
-  | TSESTree.FunctionDeclaration
-  | TSESTree.FunctionExpression
-  | TSESTree.ArrowFunctionExpression;
+import { isFunction, getLastAncestor } from '../utils/ast-utils';
 
 type AllowedAncestors =
   | TSESTree.VariableDeclarator
   | TSESTree.MethodDefinition
   | TSESTree.AssignmentExpression
   | TSESTree.Property;
+
+type Function =
+  | TSESTree.FunctionDeclaration
+  | TSESTree.FunctionExpression
+  | TSESTree.ArrowFunctionExpression;
 
 const rule: TSESLint.RuleModule<string, string[]> = {
   meta: {
@@ -31,10 +32,8 @@ const rule: TSESLint.RuleModule<string, string[]> = {
       url:
         'https://github.com/timon-and-pumbaa/eslint-plugin-fsd/blob/master/docs/rules/hof-name-prefix.md',
     },
-    fixable: undefined, // or "code" or "whitespace"
-    schema: [
-      // fill in your schema
-    ],
+    fixable: undefined,
+    schema: [],
     messages: {
       requireMake: 'Higher order functions name should start with make',
     },
@@ -57,37 +56,6 @@ const rule: TSESLint.RuleModule<string, string[]> = {
         node: identifier,
         messageId: 'requireMake',
       });
-    };
-
-    const isFunctionHigherOrder = (node: Function): boolean => {
-      if (!node.body) return false;
-
-      const functionBody = node.body as TSESTree.BlockStatement;
-      const { body: functionContent } = functionBody;
-
-      const functionTypes = ['ArrowFunctionExpression', 'FunctionExpression'];
-
-      const statementThatReturnsFunction = functionContent.find(
-        (contentNode: TSESTree.Node) => {
-          const nodeReturnsFunction =
-            contentNode.type === 'ReturnStatement' &&
-            contentNode.argument &&
-            functionTypes.includes(contentNode.argument.type);
-
-          if (nodeReturnsFunction) return true;
-
-          return false;
-        },
-      );
-
-      return !!statementThatReturnsFunction;
-    };
-
-    const getLastAncestor = (): TSESTree.Node => {
-      const ancestors = context.getAncestors();
-      const lastAncestor = ancestors[ancestors.length - 1];
-
-      return lastAncestor as TSESTree.Node;
     };
 
     const checkIdentifier = (identifier: TSESTree.Identifier): void => {
@@ -115,6 +83,33 @@ const rule: TSESLint.RuleModule<string, string[]> = {
       return identifier as TSESTree.Identifier;
     };
 
+    const isFunctionHigherOrder = (node: Function): boolean => {
+      if (!node.body) return false;
+
+      const functionBody = node.body as TSESTree.BlockStatement | Function;
+
+      // When function body has no braces
+      if (isFunction(functionBody)) return true;
+      if (functionBody.type !== 'BlockStatement') return false;
+
+      const { body: functionContent } = functionBody as TSESTree.BlockStatement;
+
+      const statementThatReturnsFunction = functionContent.find(
+        (contentNode: TSESTree.Node) => {
+          const nodeReturnsFunction =
+            contentNode.type === 'ReturnStatement' &&
+            contentNode.argument &&
+            isFunction(contentNode.argument);
+
+          if (nodeReturnsFunction) return true;
+
+          return false;
+        },
+      );
+
+      return !!statementThatReturnsFunction;
+    };
+
     const checkFunctionDeclaration = (
       node: TSESTree.FunctionDeclaration,
     ): void => {
@@ -137,7 +132,7 @@ const rule: TSESLint.RuleModule<string, string[]> = {
         'Property',
       ];
 
-      const lastAncestor = getLastAncestor() as AllowedAncestors;
+      const lastAncestor = getLastAncestor(context) as AllowedAncestors;
       const functionIsHigherOrder = isFunctionHigherOrder(node);
 
       if (
