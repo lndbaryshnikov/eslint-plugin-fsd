@@ -7,7 +7,7 @@ This rule enforces the use of `make` prefix in higher order function names (func
 Examples of **incorrect** code for this rule:
 
 ```js
-/* eslint hof-name-prefix: ["error", "make"] */
+/* eslint hof-name-prefix: "error" */
 
 const clickHandler = () => {
   return (event) => {
@@ -27,7 +27,7 @@ class Button {
 Examples of **correct** code for this rule:
 
 ```js
-/* eslint hof-name-prefix: ["error", "make"] */
+/* eslint hof-name-prefix: "error" */
 
 const makeClickHandler = () => {
   return (event) => {
@@ -43,7 +43,3 @@ const button = {
   }
 }
 ```
-
-### Options
-
-A string with the name of the prefix to be used, like `make`, `create`, `get`, or any other.
