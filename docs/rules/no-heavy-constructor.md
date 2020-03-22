@@ -1,8 +1,12 @@
 # No heavy constructor (no-heavy-constructor)
 
-This rule prohibits searching the DOM tree and defining handlers in the constructor. If you implement such functionality, you should put it in a separate method.
+This rule prohibits searching the DOM tree and defining handlers in the constructor. If you implement such functionality, you should put it in a separate method. Rule doesn't work for jQuery yet.
 
 ## Rule Details
+
+Rule number **10** from the FSD [Frontend best practices](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/goodPractice.md):
+
+>For example, if you want to search the DOM tree to set values for the fields of the class, you need to put this functionality in a separate method. Also in case you need to set handlers for events - in a separate method.
 
 Examples of **incorrect** code for this rule:
 
@@ -12,6 +16,18 @@ Examples of **incorrect** code for this rule:
 class Button {
   constructor(button) {
     button.addEventListener('click', this.handleStopButtonClick);
+  }
+}
+
+class Button {
+  constructor() {
+    const buttons = document.querySelectorAll('.button');
+  }
+}
+
+class Button {
+  constructor() {
+    const forms = document.forms;
   }
 }
 ```
