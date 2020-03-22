@@ -12,6 +12,8 @@ import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
 import {
   isHtmlEventIdentifier,
   isListenerMethodIdentifier,
+  isHtmlElementSearchMethodIdentifier,
+  isHtmlElementsObjectCollectionIdentifier,
 } from '../utils/ast-utils';
 
 const rule: TSESLint.RuleModule<string, string[]> = {
@@ -60,13 +62,29 @@ const rule: TSESLint.RuleModule<string, string[]> = {
       }
     };
 
+    const checkForSearchMethodsAndCollections = (
+      identifier: TSESTree.Identifier,
+    ): void => {
+      if (
+        isHtmlElementSearchMethodIdentifier(identifier) ||
+        isHtmlElementsObjectCollectionIdentifier(identifier)
+      ) {
+        reportIdentifier(identifier);
+      }
+    };
+
     //----------------------------------------------------------------------
     // Public
     //----------------------------------------------------------------------
 
+    const constructor =
+      'ClassDeclaration MethodDefinition[key.name="constructor"]';
+    const identifier = 'Identifier.property[name]';
+
     return {
-      'ClassDeclaration MethodDefinition[key.name="constructor"] MemberExpression.left Identifier.property[name]': checkForEventAttributes,
-      'ClassDeclaration MethodDefinition[key.name="constructor"] MemberExpression.callee Identifier.property[name]': checkForListenersMethods,
+      [`${constructor} MemberExpression.left ${identifier}`]: checkForEventAttributes,
+      [`${constructor} MemberExpression.callee ${identifier}`]: checkForListenersMethods,
+      [`${constructor} MemberExpression ${identifier}`]: checkForSearchMethodsAndCollections,
     };
   },
 };

@@ -3,6 +3,7 @@ import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
 //------------------------------------------------------------------------------
 // Patterns
 //------------------------------------------------------------------------------
+
 const anyFunction = /^(?:Function(?:Declaration|Expression)|ArrowFunctionExpression)$/u;
 
 const anyWindowEvent = /^(?:on(?:afterprint|beforeprint|beforeunload|error|hashchange|load|message|offline|online|pagehide|pageshow|popstate|resize|storage|unload))&/u;
@@ -13,6 +14,9 @@ const anyDragEvent = /^(?:on(?:drag|dragend|dragenter|dragleave|dragover|dragsta
 const anyClipboardEvent = /^(?:on(?:copy|cut|paste))$/u;
 
 const anyListenersMethods = /^(?:(?:add|remove)EventListener)$/u;
+
+const anyHtmlElementsSearchMethod = /^(?:getElement(?:ById|sByTagName|sByClassName)|querySelector(?:All)?)$/u;
+const anyHtmlElementObjectCollection = /^(?:anchors|body|documentElement|embeds|forms|head|images|links|scripts|title)$/;
 
 //------------------------------------------------------------------------------
 // FUnctions
@@ -43,6 +47,18 @@ const isListenerMethodIdentifier = (node: TSESTree.Identifier): boolean => {
   return !!(node && anyListenersMethods.test(node.name));
 };
 
+const isHtmlElementSearchMethodIdentifier = (
+  node: TSESTree.Identifier,
+): boolean => {
+  return !!(node && anyHtmlElementsSearchMethod.test(node.name));
+};
+
+const isHtmlElementsObjectCollectionIdentifier = (
+  node: TSESTree.Identifier,
+): boolean => {
+  return !!(node && anyHtmlElementObjectCollection.test(node.name));
+};
+
 const getLastAncestor = <MessageIds extends string, TOptions extends unknown[]>(
   context: TSESLint.RuleContext<MessageIds, TOptions>,
 ): TSESTree.Node => {
@@ -57,4 +73,6 @@ export {
   getLastAncestor,
   isHtmlEventIdentifier,
   isListenerMethodIdentifier,
+  isHtmlElementSearchMethodIdentifier,
+  isHtmlElementsObjectCollectionIdentifier,
 };
