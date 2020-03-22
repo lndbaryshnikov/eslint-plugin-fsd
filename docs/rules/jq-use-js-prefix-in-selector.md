@@ -1,4 +1,4 @@
-# All classes that we use to search the DOM must begin with 'js-' prefix (jq-use-js-prefix-in-selector)
+# All classes that are used to search the DOM must begin with 'js-' prefix (jq-use-js-prefix-in-selector)
 
 [№1 in jQuery](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/jQuery.md)
 

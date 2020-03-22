@@ -44,7 +44,7 @@ const createRule = ESLintUtils.RuleCreator(
 
 const errorMessages = {
   useJsPrefix:
-    'All classes that we use to search the DOM must begin with "js-" prefix ',
+    'All classes that are used to search the DOM must begin with "js-" prefix',
 } as const;
 
 const meta: RuleMetaData<keyof typeof errorMessages> = {
@@ -52,7 +52,7 @@ const meta: RuleMetaData<keyof typeof errorMessages> = {
   docs: {
     category: 'Best Practices',
     description:
-      'All classes that we use to search the DOM must begin with "js-" prefix ',
+      'All classes that are used to search the DOM must begin with "js-" prefix',
     recommended: false,
   },
   messages: errorMessages,
