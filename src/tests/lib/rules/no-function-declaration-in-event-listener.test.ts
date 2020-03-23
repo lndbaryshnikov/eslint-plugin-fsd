@@ -13,6 +13,7 @@ import { es6 } from '../../helpers/configs';
 
 const valid: TSESLint.ValidTestCase<[]>[] = [
   {
+    // event handler as class method
     code: `
       class Component {
         bindEventListeners() {
@@ -26,8 +27,15 @@ const valid: TSESLint.ValidTestCase<[]>[] = [
     `,
   },
   {
+    // event handler as simple function
     code: `
       myDOMElement.addEventListener('click', handleMyElClick);
+    `,
+  },
+  {
+    // using 'on' method to add event listener
+    code: `
+      myDOMElement.on('click', handleMyElClick);
     `,
   },
 ];
@@ -38,6 +46,7 @@ const valid: TSESLint.ValidTestCase<[]>[] = [
 
 const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
   {
+    // anonymous function as event handler
     code: `
       elem.addEventListener( "click" , function() {alert('Спасибо!')});
     `,
@@ -48,6 +57,7 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // named function as event handler
     code: `
       elem.addEventListener( "click" , function mySuperHandler() {alert('super')});
     `,
@@ -58,6 +68,7 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // arrow function as event handler
     code: `
       elem.addEventListener( "click" , e => someHandler(e));
     `,
@@ -68,8 +79,11 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // using 'on' method to add event listener
     code: `
-      elem.addEventListener( "click" , () => null);
+      myDOMElement.on('click', function(e) {
+        alert(e.target.value);
+      });
     `,
     errors: [
       {

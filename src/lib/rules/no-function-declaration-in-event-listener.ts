@@ -31,7 +31,7 @@ const meta: RuleMetaData<keyof typeof errorMessages> = {
 };
 
 const addEventListenerSelector =
-  'CallExpression > MemberExpression > Identifier.property[name="addEventListener"]';
+  'CallExpression > MemberExpression > Identifier.property[name=/addEventListener|on/]';
 
 const rule = createRule({
   name,
