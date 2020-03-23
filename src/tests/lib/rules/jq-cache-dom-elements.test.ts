@@ -34,6 +34,36 @@ const valid: TSESLint.ValidTestCase<[]>[] = [
       }
     `,
   },
+  {
+    // DOM queries in 2 local scopes
+    code: `
+      function bar() {
+        var $element = $('.js-element');
+        $element.show();
+      }
+
+      function foo() {
+        var $element = $('.js-element');
+        $element.find('.js-children').doSomething();
+        $element.attr('data-id', 123);
+      }
+    `,
+  },
+  {
+    // Function inside function
+    code: `
+      function foo() {
+        function bar() {
+          var x = $('.js-element');
+          x.find('.js-children').doSomething();
+          x.attr('data-id', 123);
+          x.show();
+        }
+        
+        return bar;
+      }
+    `,
+  },
 ];
 
 //
@@ -55,6 +85,19 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // Not cached DOM node (using jQuery instead of $)
+    code: `
+      jQuery('.js-element').show();
+      jQuery('.js-element').find('.js-children').doSomething();
+      jQuery('.js-element').attr('data-id', 123);
+    `,
+    errors: [
+      {
+        messageId: 'cacheDOMNodes',
+      },
+    ],
+  },
+  {
     // Not cached DOM node in local scope
     code: `
       var x = $('.js-element').show();
@@ -62,6 +105,25 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
       function foo() {
         $('.js-element').find('.js-children').doSomething();
         $('.js-element').attr('data-id', 123);
+      }
+    `,
+    errors: [
+      {
+        messageId: 'cacheDOMNodes',
+      },
+    ],
+  },
+  {
+    // Function inside function
+    code: `
+      function foo() {
+        function bar() {
+          $('.js-element').find('.js-children').doSomething();
+          $('.js-element').attr('data-id', 123);
+          $('.js-element').show();
+        }
+        
+        return bar;
       }
     `,
     errors: [
