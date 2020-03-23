@@ -22,11 +22,16 @@ const anyListenersMethods = /^(?:(?:add|remove)EventListener)$/u;
 const anyHtmlElementsSearchMethod = /^(?:getElement(?:ById|sByTagName|sByClassName)|querySelector(?:All)?)$/u;
 const anyHtmlElementObjectCollection = /^(?:anchors|body|documentElement|embeds|forms|head|images|links|scripts|title)$/;
 
+type Function =
+  | TSESTree.FunctionDeclaration
+  | TSESTree.FunctionExpression
+  | TSESTree.ArrowFunctionExpression;
+
 //------------------------------------------------------------------------------
 // FUnctions
 //------------------------------------------------------------------------------
 
-const isFunction = (node: TSESTree.Node): boolean => {
+const isFunction = (node: TSESTree.Node): node is Function => {
   return !!(node && anyFunction.test(node.type));
 };
 
@@ -97,6 +102,7 @@ function getAncestorOfType<T extends TSESTree.Node>(
 }
 
 export {
+  Function,
   isFunction,
   getLastAncestor,
   getAncestorOfType,

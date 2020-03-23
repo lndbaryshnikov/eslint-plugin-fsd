@@ -6,6 +6,15 @@ import {
 
 import { RuleMetaData } from '../../types';
 
+import { Function, isFunction, getAncestorOfType } from '../utils/ast-utils';
+
+//
+// ─── TYPES ──────────────────────────────────────────────────────────────────────
+//
+
+type SelectorToNodes = { [selector: string]: TSESTree.Node[] };
+type ScopeToSelectors = { [scope: string]: SelectorToNodes };
+
 //
 // ─── RULE DECLARATIONS ──────────────────────────────────────────────────────────
 //
@@ -19,7 +28,7 @@ const createRule = ESLintUtils.RuleCreator(
 
 const errorMessages = {
   cacheDOMNodes:
-    'Cache selected DOM nodes. This DOM node was selected {{ times }} times',
+    'Selector {{ selector }} was used {{ times }} times. Try caching this DOM node instead',
 } as const;
 
 const meta: RuleMetaData<keyof typeof errorMessages> = {
@@ -41,12 +50,17 @@ const rule = createRule({
   meta,
   defaultOptions: [],
   create(context) {
-    const foundSelectors: Map<string, TSESTree.Node[]> = new Map();
+    const scopeToSelectors: ScopeToSelectors = {};
 
     return {
       [jqDOMSelector]: function checkDOMSelector(
         node: TSESTree.Identifier,
       ): void {
+        const functionAncestor = getAncestorOfType<Function>(isFunction, node);
+        const scopeId = functionAncestor
+          ? `${functionAncestor.range.join(',')}` // no 2 functions can have same range
+          : 'global';
+
         const callExpression = node.parent as TSESTree.CallExpression;
         const firstArg = callExpression.arguments[0];
 
@@ -54,24 +68,31 @@ const rule = createRule({
           if (!firstArg.value) return;
 
           const selector = firstArg.value.toString();
-          const sameSelectorNodes = foundSelectors.get(selector) || [];
 
-          if (foundSelectors.has(selector)) {
-            sameSelectorNodes.push(callExpression);
+          const scope = scopeToSelectors[scopeId];
+          const isSelectorInScope = scope && scope[selector];
+
+          if (isSelectorInScope) {
+            scopeToSelectors[scopeId][selector].push(callExpression);
+          } else if (scope) {
+            scope[selector] = [callExpression];
+            scopeToSelectors[scopeId] = scope;
+          } else {
+            scopeToSelectors[scopeId] = { [selector]: [callExpression] };
           }
-
-          foundSelectors.set(selector, sameSelectorNodes);
         }
       },
       'Program:exit': function reportIfRepeatedSelectionsFound(): void {
-        foundSelectors.forEach(selectors => {
-          if (selectors.length > 1) {
-            context.report({
-              messageId: 'cacheDOMNodes',
-              node: selectors[0],
-              data: { times: selectors.length },
-            });
-          }
+        Object.entries(scopeToSelectors).forEach(([_, selectorToNodes]) => {
+          Object.entries(selectorToNodes).forEach(([selector, nodes]) => {
+            if (nodes.length > 1) {
+              context.report({
+                messageId: 'cacheDOMNodes',
+                node: nodes[0],
+                data: { selector, times: nodes.length },
+              });
+            }
+          });
         });
       },
     };

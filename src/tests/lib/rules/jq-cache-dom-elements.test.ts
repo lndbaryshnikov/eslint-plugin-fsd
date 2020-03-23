@@ -13,11 +13,25 @@ import { es6 } from '../../helpers/configs';
 
 const valid: TSESLint.ValidTestCase<[]>[] = [
   {
+    // Cache dom node
     code: `
       var $element = $('.js-element');
       $element.show();
       $element.find('.js-children').doSomething();
       $element.attr('data-id', 123);
+    `,
+  },
+  {
+    // DOM queries in global & local scopes
+    code: `
+      var $element = $('.js-element');
+      $element.show();
+
+      function foo() {
+        var $element = $('.js-element');
+        $element.find('.js-children').doSomething();
+        $element.attr('data-id', 123);
+      }
     `,
   },
 ];
@@ -28,10 +42,27 @@ const valid: TSESLint.ValidTestCase<[]>[] = [
 
 const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
   {
+    // Not cached DOM node
     code: `
       $('.js-element').show();
       $('.js-element').find('.js-children').doSomething();
       $('.js-element').attr('data-id', 123);
+    `,
+    errors: [
+      {
+        messageId: 'cacheDOMNodes',
+      },
+    ],
+  },
+  {
+    // Not cached DOM node in local scope
+    code: `
+      var x = $('.js-element').show();
+
+      function foo() {
+        $('.js-element').find('.js-children').doSomething();
+        $('.js-element').attr('data-id', 123);
+      }
     `,
     errors: [
       {
