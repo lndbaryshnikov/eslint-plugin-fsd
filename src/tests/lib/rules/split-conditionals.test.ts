@@ -25,21 +25,41 @@ const valid: TSESLint.ValidTestCase<[]>[] = [
     `,
   },
   {
-    // binary conditional
+    // 1 binary condition
     code: `
       if (a === b) { }
     `,
   },
   {
-    // unary conditional
+    // 2 binary conditions
+    code: `
+      if (a === b && b < c) { }
+    `,
+  },
+  {
+    // 1 unary condition
     code: `
       if (!a) { }
     `,
   },
   {
-    // skip assignment expressions
+    // 2 unary conditions
+    code: `
+      if (!a && !b) { }
+    `,
+  },
+  {
+    // skip if inside assignment expressions
     code: `
       var isUserDefined = user && user.id !== null;
+    `,
+  },
+  {
+    // skip if inside return statement
+    code: `
+      function foo(x) {
+        return (x >= 100 && x < window.width) || (x >= 200 && x < window.width);
+      }
     `,
   },
 ];
@@ -52,7 +72,9 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
   {
     // if clause with 2 conditions
     code: `
-      if ((user.isAdmin) && (user.role === item.owner)) { }
+      if ((this.allowUpdate) && ((user.isAdmin) || (user.role === item.owner))) {
+        this.update(item.data);
+      }
     `,
     errors: [
       {
@@ -63,12 +85,9 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
   {
     // if clause with 3 conditions
     code: `
-      if ((user.isAdmin) && (user.role === item.owner) || !user.id) { }
+      if (a > 10 && b > 50 || (a + b > 60) || (a - b) < 0) { }
     `,
     errors: [
-      {
-        messageId: 'tooManyConditions',
-      },
       {
         messageId: 'tooManyConditions',
       },
@@ -77,7 +96,30 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
   {
     // while clause with 2 conditions
     code: `
-      while ((user.isAdmin) || (user.role === item.owner)) { }
+      while (x > 100 || y !== 200 && (x + y !== z)) { }
+    `,
+    errors: [
+      {
+        messageId: 'tooManyConditions',
+      },
+    ],
+  },
+  {
+    // while clause with 3 conditions
+    code: `
+      while (x > 100 || y !== 200 && (x + y !== z) || (x - y < 0)) { }
+    `,
+    errors: [
+      {
+        messageId: 'tooManyConditions',
+      },
+    ],
+  },
+  {
+    // do while clause with 2 conditions
+    code: `
+      do {}
+      while (x > 100 || y !== 200 && (x + y !== z));
     `,
     errors: [
       {
@@ -88,18 +130,7 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
   {
     // for loop with 2 conditions
     code: `
-      for (let i = 0; i < list.length || i <= 100; i += 1) { }
-    `,
-    errors: [
-      {
-        messageId: 'tooManyConditions',
-      },
-    ],
-  },
-  {
-    // use 'in' operator
-    code: `
-      if (a === b || c in d) { }
+      for (let i = 0; i < list.length || i <= 100 && i < j; i += 1) { }
     `,
     errors: [
       {

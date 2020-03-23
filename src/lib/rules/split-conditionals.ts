@@ -1,30 +1,20 @@
-import { TSESTree, ESLintUtils } from '@typescript-eslint/experimental-utils';
+import {
+  TSESTree,
+  ESLintUtils,
+  AST_NODE_TYPES,
+} from '@typescript-eslint/experimental-utils';
 
 import { RuleMetaData } from '../../types';
-
-import { isVariableDeclaration, getAncestorOfType } from '../utils/ast-utils';
 
 //
 // ─── HELPER FUNCTIONS ───────────────────────────────────────────────────────────
 //
 
 function hasMoreThen1Condition(node: TSESTree.LogicalExpression): boolean {
-  const notAllowed = ['LogicalExpression', 'BinaryExpression'];
-
-  return Boolean(
-    notAllowed.includes(node.left.type) || notAllowed.includes(node.right.type),
+  return (
+    node.left.type === AST_NODE_TYPES.LogicalExpression ||
+    node.right.type === AST_NODE_TYPES.LogicalExpression
   );
-}
-
-function isInsideVariableDeclaration(
-  node: TSESTree.LogicalExpression,
-): boolean {
-  const variableDeclaration = getAncestorOfType<TSESTree.VariableDeclaration>(
-    isVariableDeclaration,
-    node,
-  );
-
-  return !!variableDeclaration;
 }
 
 //
@@ -60,19 +50,35 @@ const rule = createRule({
   meta,
   defaultOptions: [],
   create(context) {
-    return {
-      LogicalExpression: function checkLogicalExpression(node): void {
-        if (isInsideVariableDeclaration(node)) {
-          return;
-        }
+    function checkLogicalExpression(node: TSESTree.LogicalExpression): void {
+      if (hasMoreThen1Condition(node)) {
+        context.report({
+          node,
+          messageId: 'tooManyConditions',
+        });
+      }
+    }
 
-        if (hasMoreThen1Condition(node)) {
-          context.report({
-            node,
-            messageId: 'tooManyConditions',
-          });
-        }
-      },
+    function checkRule(
+      node:
+        | TSESTree.IfStatement
+        | TSESTree.WhileStatement
+        | TSESTree.DoWhileStatement
+        | TSESTree.ForStatement,
+    ): void {
+      const testCondition = node.test;
+
+      if (!testCondition) return;
+      if (testCondition.type !== AST_NODE_TYPES.LogicalExpression) return;
+
+      checkLogicalExpression(testCondition);
+    }
+
+    return {
+      IfStatement: checkRule,
+      WhileStatement: checkRule,
+      DoWhileStatement: checkRule,
+      ForStatement: checkRule,
     };
   },
 });
