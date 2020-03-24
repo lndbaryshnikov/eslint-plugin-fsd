@@ -1,8 +1,7 @@
 import { TSESTree, ESLintUtils } from '@typescript-eslint/experimental-utils';
+import { isFunction } from 'eslint/lib/rules/utils/ast-utils';
 
 import { RuleMetaData } from '../../types';
-
-import { isFunction } from '../utils/ast-utils';
 
 //
 // ─── RULE DECLARATIONS ──────────────────────────────────────────────────────────

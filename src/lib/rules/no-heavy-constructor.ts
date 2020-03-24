@@ -14,7 +14,7 @@ import {
   isListenerMethodIdentifier,
   isHtmlElementSearchMethodIdentifier,
   isHtmlElementsObjectCollectionIdentifier,
-} from '../utils/ast-utils';
+} from '../utils/typeguards';
 
 const rule: TSESLint.RuleModule<string, string[]> = {
   meta: {

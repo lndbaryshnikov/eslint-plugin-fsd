@@ -5,7 +5,12 @@ declare module 'eslint/lib/rules/utils/ast-utils' {
     TSESLint,
   } from '@typescript-eslint/experimental-utils';
 
-  export function isFunction(node: TSESTree.Node | null): boolean;
+  type Function =
+    | TSESTree.FunctionDeclaration
+    | TSESTree.FunctionExpression
+    | TSESTree.ArrowFunctionExpression;
+
+  export function isFunction(node: TSESTree.Node | null): node is Function;
 
   export function getVariableByName(
     initScope: TSESLintScope.Scope,

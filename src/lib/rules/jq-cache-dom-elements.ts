@@ -4,9 +4,10 @@ import {
   AST_NODE_TYPES,
 } from '@typescript-eslint/experimental-utils';
 
-import { RuleMetaData } from '../../types';
+import { isFunction } from 'eslint/lib/rules/utils/ast-utils';
 
-import { Function, isFunction, getAncestorOfType } from '../utils/ast-utils';
+import { RuleMetaData, Function } from '../../types';
+import { getAncestorOfType } from '../utils/ast-utils';
 
 //
 // ─── TYPES ──────────────────────────────────────────────────────────────────────
