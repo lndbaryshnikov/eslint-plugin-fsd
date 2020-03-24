@@ -1,18 +1,24 @@
 import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
 
-const isFunction = (node: TSESTree.Node): boolean => {
-  const anyFunctionPattern = /^(?:Function(?:Declaration|Expression)|ArrowFunctionExpression)$/u;
-
-  return !!(node && anyFunctionPattern.test(node.type));
-};
-
-const getLastAncestor = <MessageIds extends string, TOptions extends unknown[]>(
+const getParent = <MessageIds extends string, TOptions extends unknown[]>(
   context: TSESLint.RuleContext<MessageIds, TOptions>,
-): TSESTree.Node => {
+): TSESTree.Node | undefined => {
   const ancestors = context.getAncestors();
-  const lastAncestor = ancestors[ancestors.length - 1];
-
-  return lastAncestor;
+  return ancestors.length > 0 ? ancestors[ancestors.length - 1] : undefined;
 };
 
-export { isFunction, getLastAncestor };
+/**
+ * Return the first ancestor that meets the given check criteria.
+ */
+function getAncestorOfType<T extends TSESTree.Node>(
+  checker: (node: TSESTree.Node) => node is T,
+  node: TSESTree.Node,
+): T | null {
+  if (checker(node)) return node;
+
+  if (!node.parent) return null;
+
+  return getAncestorOfType(checker, node.parent);
+}
+
+export { getParent, getAncestorOfType };

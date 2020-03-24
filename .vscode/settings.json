@@ -1,0 +1,9 @@
+{
+  "git.ignoreLimitWarning": true,
+  "cSpell.words": [
+    "TSES",
+    "dedent",
+    "estree",
+    "typeguards"
+  ]
+}

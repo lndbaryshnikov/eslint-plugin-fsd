@@ -8,19 +8,16 @@
 //------------------------------------------------------------------------------
 
 import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
+import { isFunction } from 'eslint/lib/rules/utils/ast-utils';
 
-import { isFunction, getLastAncestor } from '../utils/ast-utils';
+import { Function } from '../../types';
+import { getParent } from '../utils/ast-utils';
 
 type AllowedAncestors =
   | TSESTree.VariableDeclarator
   | TSESTree.MethodDefinition
   | TSESTree.AssignmentExpression
   | TSESTree.Property;
-
-type Function =
-  | TSESTree.FunctionDeclaration
-  | TSESTree.FunctionExpression
-  | TSESTree.ArrowFunctionExpression;
 
 const rule: TSESLint.RuleModule<string, string[]> = {
   meta: {
@@ -132,14 +129,14 @@ const rule: TSESLint.RuleModule<string, string[]> = {
         'Property',
       ];
 
-      const lastAncestor = getLastAncestor(context) as AllowedAncestors;
+      const parent = getParent(context);
+
+      if (!parent) return;
+
       const functionIsHigherOrder = isFunctionHigherOrder(node);
 
-      if (
-        allowedAncestors.includes(lastAncestor.type) &&
-        functionIsHigherOrder
-      ) {
-        const identifier = getIdentifier(lastAncestor);
+      if (allowedAncestors.includes(parent.type) && functionIsHigherOrder) {
+        const identifier = getIdentifier(parent as AllowedAncestors);
 
         checkIdentifier(identifier);
       }
