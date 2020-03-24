@@ -49,6 +49,16 @@ const valid: TSESLint.ValidTestCase<[]>[] = [
     `,
   },
   {
+    // if elseif
+    code: `
+      if (!a && !b) { 
+        console.log('ok');
+      } else if (c !== d) {
+        console.log('bad');
+      } 
+    `,
+  },
+  {
     // skip if inside assignment expressions
     code: `
       var isUserDefined = user && user.id !== null;
@@ -88,6 +98,24 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
       if (a > 10 && b > 50 || (a + b > 60) || (a - b) < 0) { }
     `,
     errors: [
+      {
+        messageId: 'tooManyConditions',
+      },
+    ],
+  },
+  {
+    // if elseif
+    code: `
+      if (a < b && b > c || c < 100) { 
+        console.log('ok');
+      } else if (a > b && b < c || c > 100) {
+        console.log('bad');
+      } 
+    `,
+    errors: [
+      {
+        messageId: 'tooManyConditions',
+      },
       {
         messageId: 'tooManyConditions',
       },
