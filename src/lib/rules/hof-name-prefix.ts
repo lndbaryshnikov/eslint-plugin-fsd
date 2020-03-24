@@ -8,6 +8,7 @@
 //------------------------------------------------------------------------------
 
 import { TSESTree, TSESLint } from '@typescript-eslint/experimental-utils';
+import utils from 'eslint/lib/rules/utils/ast-utils';
 
 import { isFunction, getLastAncestor } from '../utils/ast-utils';
 
