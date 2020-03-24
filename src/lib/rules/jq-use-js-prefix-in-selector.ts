@@ -4,6 +4,8 @@ import {
   ESLintUtils,
 } from '@typescript-eslint/experimental-utils';
 
+import 'core-js';
+
 import { RuleMetaData } from '../../types';
 
 //
