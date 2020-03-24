@@ -13,21 +13,25 @@ import { es6 } from '../../helpers/configs';
 
 const valid: TSESLint.ValidTestCase<[]>[] = [
   {
+    // 1 class name with 'js' prefix
     code: `
       $('.js-open-popup-button').click();
     `,
   },
   {
+    // 1 class name with 'js' prefix & jQuery instead of $
     code: `
       jQuery('.js-open-popup-button').click();
     `,
   },
   {
+    // 2 class names with 'js' prefix
     code: `
       $('.js-wrapper .js-open-popup-button').click();
     `,
   },
   {
+    // multiple selectors
     code: `
       $('#container .js-wrapper, #container2 .js-wrapper > .js-popup').click();
     `,
@@ -40,6 +44,7 @@ const valid: TSESLint.ValidTestCase<[]>[] = [
 
 const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
   {
+    // 1 class without 'js' prefix
     code: `
       $('.open-popup-button').click();
     `,
@@ -50,6 +55,7 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // 1 class name without 'js' prefix & jQuery instead of $
     code: `
       jQuery('.open-popup-button').click();
     `,
@@ -60,6 +66,7 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // 2 classes where 1 doesn't have 'js' prefix
     code: `
       $('.js-wrapper .open-popup-button').click();
     `,
@@ -70,6 +77,7 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // multiple selector
     code: `
       $('.js-wrapper .js-open-popup-button, #container > .wrapper').click();
     `,

@@ -1,5 +1,7 @@
 # Eslint plugin for FSD [best practices](https://github.com/fullstack-development/front-end-best-practices)
 
+[![Continuous Integration](https://github.com/timon-and-pumbaa/eslint-plugin-fsd/workflows/CI/badge.svg)](https://github.com/timon-and-pumbaa/eslint-plugin-fsd/actions)
+
 Eslint plugin for FSD best practices
 
 ## Installation
@@ -41,3 +43,4 @@ Then configure the rules you want to use under the rules section.
 ## Supported Rules
 
 - [hof-name-prefix](https://github.com/timon-and-pumbaa/eslint-plugin-fsd/blob/master/docs/rules/hof-name-prefix.md)
+- [no-heavy-constructor](https://github.com/timon-and-pumbaa/eslint-plugin-fsd/blob/master/docs/rules/no-heavy-constructor.md)

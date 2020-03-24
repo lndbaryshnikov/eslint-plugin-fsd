@@ -13,28 +13,63 @@ import { es6 } from '../../helpers/configs';
 
 const valid: TSESLint.ValidTestCase<[]>[] = [
   {
+    // function invocation
+    code: `
+      if (isUpdateAllowedForUser(user, item)) { }
+    `,
+  },
+  {
+    // method invocation
     code: `
       if (this.isUpdateAllowedForUser(user, item)) { }
     `,
   },
   {
+    // 1 binary condition
     code: `
       if (a === b) { }
     `,
   },
   {
+    // 2 binary conditions
     code: `
-      if (a && b) { }
+      if (a === b && b < c) { }
     `,
   },
   {
-    code: `
-      if (a || b) { }
-    `,
-  },
-  {
+    // 1 unary condition
     code: `
       if (!a) { }
+    `,
+  },
+  {
+    // 2 unary conditions
+    code: `
+      if (!a && !b) { }
+    `,
+  },
+  {
+    // if elseif
+    code: `
+      if (!a && !b) { 
+        console.log('ok');
+      } else if (c !== d) {
+        console.log('bad');
+      } 
+    `,
+  },
+  {
+    // skip if inside assignment expressions
+    code: `
+      var isUserDefined = user && user.id !== null;
+    `,
+  },
+  {
+    // skip if inside return statement
+    code: `
+      function foo(x) {
+        return (x >= 100 && x < window.width) || (x >= 200 && x < window.width);
+      }
     `,
   },
 ];
@@ -45,8 +80,11 @@ const valid: TSESLint.ValidTestCase<[]>[] = [
 
 const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
   {
+    // if clause with 2 conditions
     code: `
-      if ((user.isAdmin) && (user.role === item.owner)) { }
+      if ((this.allowUpdate) && ((user.isAdmin) || (user.role === item.owner))) {
+        this.update(item.data);
+      }
     `,
     errors: [
       {
@@ -55,8 +93,9 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // if clause with 3 conditions
     code: `
-      if ((user.isAdmin) || (user.role === item.owner)) { }
+      if (a > 10 && b > 50 || (a + b > 60) || (a - b) < 0) { }
     `,
     errors: [
       {
@@ -65,38 +104,13 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // if elseif
     code: `
-      if (a === b || c !== d) { }
-    `,
-    errors: [
-      {
-        messageId: 'tooManyConditions',
-      },
-    ],
-  },
-  {
-    code: `
-      if (a === b || c in d) { }
-    `,
-    errors: [
-      {
-        messageId: 'tooManyConditions',
-      },
-    ],
-  },
-  {
-    code: `
-      if (myList.includes(a) && b > c) { }
-    `,
-    errors: [
-      {
-        messageId: 'tooManyConditions',
-      },
-    ],
-  },
-  {
-    code: `
-      if (a < b && b > d && d != 0) { }
+      if (a < b && b > c || c < 100) { 
+        console.log('ok');
+      } else if (a > b && b < c || c > 100) {
+        console.log('bad');
+      } 
     `,
     errors: [
       {
@@ -108,8 +122,43 @@ const invalid: TSESLint.InvalidTestCase<keyof typeof errorMessages, []>[] = [
     ],
   },
   {
+    // while clause with 2 conditions
     code: `
-      if ({}.prototype.hasOwnProperty('x', a) && a.length > 0) { }
+      while (x > 100 || y !== 200 && (x + y !== z)) { }
+    `,
+    errors: [
+      {
+        messageId: 'tooManyConditions',
+      },
+    ],
+  },
+  {
+    // while clause with 3 conditions
+    code: `
+      while (x > 100 || y !== 200 && (x + y !== z) || (x - y < 0)) { }
+    `,
+    errors: [
+      {
+        messageId: 'tooManyConditions',
+      },
+    ],
+  },
+  {
+    // do while clause with 2 conditions
+    code: `
+      do {}
+      while (x > 100 || y !== 200 && (x + y !== z));
+    `,
+    errors: [
+      {
+        messageId: 'tooManyConditions',
+      },
+    ],
+  },
+  {
+    // for loop with 2 conditions
+    code: `
+      for (let i = 0; i < list.length || i <= 100 && i < j; i += 1) { }
     `,
     errors: [
       {

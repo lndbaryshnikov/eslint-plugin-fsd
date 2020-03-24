@@ -34,6 +34,9 @@ npm run check-types
 
 ```bash
 npm test
+
+# Run files that match pattern
+MATCH=specific-file-name npm test
 ```
 
 ### Linting source files

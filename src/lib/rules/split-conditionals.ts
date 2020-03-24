@@ -1,4 +1,8 @@
-import { TSESTree, ESLintUtils } from '@typescript-eslint/experimental-utils';
+import {
+  TSESTree,
+  ESLintUtils,
+  AST_NODE_TYPES,
+} from '@typescript-eslint/experimental-utils';
 
 import { RuleMetaData } from '../../types';
 
@@ -7,10 +11,9 @@ import { RuleMetaData } from '../../types';
 //
 
 function hasMoreThen1Condition(node: TSESTree.LogicalExpression): boolean {
-  const notAllowed = ['LogicalExpression', 'BinaryExpression'];
-
-  return Boolean(
-    notAllowed.includes(node.left.type) || notAllowed.includes(node.right.type),
+  return (
+    node.left.type === AST_NODE_TYPES.LogicalExpression ||
+    node.right.type === AST_NODE_TYPES.LogicalExpression
   );
 }
 
@@ -27,7 +30,7 @@ const createRule = ESLintUtils.RuleCreator(
 
 const errorMessages = {
   tooManyConditions:
-    'Все проверки содержащие более одного условия должны быть вынесены',
+    'All checks containing more than one condition must be separated',
 } as const;
 
 const meta: RuleMetaData<keyof typeof errorMessages> = {
@@ -35,7 +38,7 @@ const meta: RuleMetaData<keyof typeof errorMessages> = {
   docs: {
     category: 'Best Practices',
     description:
-      'Все проверки содержащие более одного условия должны быть вынесены',
+      'All checks containing more than one condition must be separated',
     recommended: false,
   },
   messages: errorMessages,
@@ -47,15 +50,35 @@ const rule = createRule({
   meta,
   defaultOptions: [],
   create(context) {
+    function checkLogicalExpression(node: TSESTree.LogicalExpression): void {
+      if (hasMoreThen1Condition(node)) {
+        context.report({
+          node,
+          messageId: 'tooManyConditions',
+        });
+      }
+    }
+
+    function checkRule(
+      node:
+        | TSESTree.IfStatement
+        | TSESTree.WhileStatement
+        | TSESTree.DoWhileStatement
+        | TSESTree.ForStatement,
+    ): void {
+      const testCondition = node.test;
+
+      if (!testCondition) return;
+      if (testCondition.type !== AST_NODE_TYPES.LogicalExpression) return;
+
+      checkLogicalExpression(testCondition);
+    }
+
     return {
-      LogicalExpression: function checkLogicalExpression(node): void {
-        if (hasMoreThen1Condition(node)) {
-          context.report({
-            node,
-            messageId: 'tooManyConditions',
-          });
-        }
-      },
+      IfStatement: checkRule,
+      WhileStatement: checkRule,
+      DoWhileStatement: checkRule,
+      ForStatement: checkRule,
     };
   },
 });
