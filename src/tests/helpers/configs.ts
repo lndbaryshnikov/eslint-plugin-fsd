@@ -7,4 +7,5 @@ const es6: TSESLint.RuleTesterConfig = {
   },
 };
 
+// eslint-disable-next-line
 export { es6 };

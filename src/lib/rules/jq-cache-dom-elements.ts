@@ -84,7 +84,7 @@ const rule = createRule({
         }
       },
       'Program:exit': function reportIfRepeatedSelectionsFound(): void {
-        Object.entries(scopeToSelectors).forEach(([_, selectorToNodes]) => {
+        Object.entries(scopeToSelectors).forEach(([, selectorToNodes]) => {
           Object.entries(selectorToNodes).forEach(([selector, nodes]) => {
             if (nodes.length > 1) {
               context.report({
