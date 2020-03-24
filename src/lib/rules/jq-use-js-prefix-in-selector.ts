@@ -19,7 +19,7 @@ import { RuleMetaData } from '../../types';
  */
 function isCorrectSelector(selector = ''): boolean {
   // if selector is not an html element string
-  if (selector.startsWith('<')) return false;
+  if (selector.startsWith('<')) return true;
 
   const parts = selector.split(',').flatMap(s => s.split(/\s+/));
 
