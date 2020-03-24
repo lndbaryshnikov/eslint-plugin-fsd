@@ -70,6 +70,9 @@ const rule = createRule({
 
           const selector = firstArg.value.toString();
 
+          // if selector is html element string
+          if (selector.startsWith('<')) return;
+
           const scope = scopeToSelectors[scopeId];
           const isSelectorInScope = scope && scope[selector];
 
