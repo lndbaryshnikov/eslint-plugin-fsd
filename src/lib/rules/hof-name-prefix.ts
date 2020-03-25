@@ -1,5 +1,5 @@
 /**
- * @fileoverview Higher order functions name prefix
+ * @fileoverview Higher order function name prefix
  * @author Leonid Baryshnikov
  */
 
@@ -23,7 +23,7 @@ const rule: TSESLint.RuleModule<string, string[]> = {
   meta: {
     type: 'layout',
     docs: {
-      description: 'Higher order functions name prefix',
+      description: 'Higher order function name prefix',
       category: 'Stylistic Issues',
       recommended: false,
       url:
@@ -32,17 +32,14 @@ const rule: TSESLint.RuleModule<string, string[]> = {
     fixable: undefined,
     schema: [],
     messages: {
-      requireMake: 'Higher order functions name should start with make',
+      requireMake: 'Higher order function name should be prefixed with "make"',
     },
   },
 
   create(
     context: TSESLint.RuleContext<string, string[]>,
   ): TSESLint.RuleListener {
-    // ERROR: can't pass tests when trying to pass options to rule...
-    // const prefixRequired = context.options[0];
-
-    const prefixRequired = 'make';
+    const prefix = 'make';
 
     //----------------------------------------------------------------------
     // Helpers
@@ -56,7 +53,7 @@ const rule: TSESLint.RuleModule<string, string[]> = {
     };
 
     const checkIdentifier = (identifier: TSESTree.Identifier): void => {
-      if (!identifier.name.startsWith(prefixRequired)) {
+      if (!identifier.name.startsWith(prefix)) {
         reportIdentifier(identifier);
       }
     };
