@@ -1,10 +1,10 @@
 # Move event handlers to separate functions (no-function-declaration-in-event-listener)
 
-[№11 in fron-end-best-practices/goodPractice](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/goodPractice.md)
-
-You should not create anonymous functions right in the same place where there is a binding to the event.
+This rule prohibits the creation of anonymous functions right in the same place where there is a binding to the event.
 
 ## Rule Details
+
+Rule number **11** from the FSD [front-end-best-practices/goodPractice](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/goodPractice.md)
 
 Examples of **incorrect** code for this rule:
 
