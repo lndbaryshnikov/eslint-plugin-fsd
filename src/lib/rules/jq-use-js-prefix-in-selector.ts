@@ -18,7 +18,7 @@ import { RuleMetaData } from '../../types';
  * @param selector jquery selector string
  */
 function isCorrectSelector(selector = ''): boolean {
-  // if selector is not an html element string
+  // if selector is an html element string
   if (selector.startsWith('<')) return true;
 
   const parts = selector.split(',').flatMap(s => s.split(/\s+/));
