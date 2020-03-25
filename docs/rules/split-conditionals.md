@@ -4,7 +4,7 @@ Divide complex conditions into more manageable parts.
 
 ## Rule Details
 
-Rule number **7** from the FSD[front-end-best-practices/goodPractice](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/goodPractice.md).
+Rule number **7** from the FSD [front-end-best-practices/goodPractice](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/goodPractice.md).
 
 Examples of **incorrect** code for this rule:
 
