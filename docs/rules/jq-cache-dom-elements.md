@@ -1,8 +1,10 @@
 # Cache all selected DOM elements (jq-cache-dom-elements)
 
-[№2 in front-end-best-practices/jQuery](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/jQuery.md)
+All found items need to be cached.
 
 ## Rule Details
+
+Rule number **2** from the FSD [front-end-best-practices/jQuery](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/jQuery.md).
 
 Examples of **incorrect** code for this rule:
 

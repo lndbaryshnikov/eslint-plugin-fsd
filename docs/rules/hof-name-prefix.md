@@ -4,7 +4,7 @@ This rule enforces the use of `make` prefix in higher order function names (func
 
 ## Rule Details
 
-Rule number **10** from the FSD [Frontend best practices](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/functionsNaming.md):
+Rule number **2** from the FSD [front-end-best-practices/JS/functionsNaming](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/functionsNaming.md):
 
 > Higher-order functions should be named using this template: make + '.\*' + verbal noun, where '.\*' is an optional, syntactically correct set of words specifying the purpose of the function.
 
