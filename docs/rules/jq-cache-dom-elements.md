@@ -1,6 +1,6 @@
 # Cache all selected DOM elements (jq-cache-dom-elements)
 
-All found items need to be cached.
+All found DOM elements need to be cached.
 
 ## Rule Details
 
