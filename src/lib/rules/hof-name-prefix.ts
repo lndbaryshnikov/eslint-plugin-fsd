@@ -53,7 +53,11 @@ const rule: TSESLint.RuleModule<string, string[]> = {
     };
 
     const checkIdentifier = (identifier: TSESTree.Identifier): void => {
-      if (!identifier.name.startsWith(prefix)) {
+      const isPrefixCorrect =
+        identifier.name.startsWith(prefix) ||
+        identifier.name.startsWith(`_${prefix}`);
+
+      if (!isPrefixCorrect) {
         reportIdentifier(identifier);
       }
     };

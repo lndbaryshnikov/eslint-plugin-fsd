@@ -49,6 +49,12 @@ ruleTester.run('hof-name-prefix', HOFNamePrefixRule as Rule.RuleModule, {
     'const makeA = () => {const b = 1; if (b === 1) {b += 1} return function() {}};',
     // When ArrowFunctionExpression has no braces
     'const makeA = () => () => {}',
+
+    // When name is prefixed by underscore
+    'class B {_makeA() {return function() {}}}',
+    'function _makeA() {const a = 1; return function() {}};',
+    'const _makeA = function() {return function() {}};',
+    'const _makeA = () => {return function() {}};',
   ],
 
   invalid: [
