@@ -61,3 +61,5 @@ You can configure rules in 2 ways:
 - [split-conditionals](docs/rules/split-conditionals.md) - *disallow complex conditions*
 - [no-heavy-constructor](docs/rules/no-heavy-constructor.md) - *disallow searching the DOM tree and defining handlers in the constructor*
 - [no-function-declaration-in-event-listener](docs/rules/no-function-declaration-in-event-listener.md) - *enforce moving event handlers to separate functions*
+
+If you want to contribute, check out [README.dev](./README.dev.md).
