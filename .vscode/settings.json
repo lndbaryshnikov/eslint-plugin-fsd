@@ -1,4 +1,17 @@
 {
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+  },
+  "eslint.validate": ["javascript", "typescript"],
+  "prettier-eslint.eslintIntegration": true,
   "git.ignoreLimitWarning": true,
   "cSpell.words": [
     "TSES",
