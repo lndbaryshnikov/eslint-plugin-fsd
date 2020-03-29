@@ -27,18 +27,25 @@ $ npm run test-watch
 $ npm run lint
 ```
 
-### Compile rules
+### Compiling rules
 
 ```bash
 $ npm run compile
 ```
 
-### Compile for production (includes all checks)
+### Compiling for production (includes all checks)
 
 ```bash
-npm run compile-tests
+npm run compile-prod
 ```
 
+### Installing globally
+
+This will create a symlink in the global folder `{prefix}/lib/node_modules/eslint-plugin-fsd` that links to the package so you can test the plugin on another projects.
+
+```bash
+$ npm run local-deploy
+```
 
 ## Folder Structure
 

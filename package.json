@@ -22,10 +22,10 @@
     "test": "jest",
     "test-watch": "jest --watchAll",
     "lint": "eslint ./src/{lib,tests}/**/* --ext .ts",
-    "local-deploy": "npm run compile-prod && npm link",
     "check-types": "tsc",
     "compile": "rimraf lib && babel src/lib --out-dir lib --extensions .ts,.js",
     "compile-prod": "npm run check-types && npm run lint && npm run test && npm run compile",
+    "local-deploy": "npm run compile-prod && npm link",
     "release": "npm run compile-prod && rimraf node_modules && np --no-tests"
   },
   "dependencies": {
