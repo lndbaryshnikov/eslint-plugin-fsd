@@ -3,7 +3,7 @@
 ### Cloning
 
 ```bash
-$ git clone https://github.com/timon-and-pumbaa/eslint-plugin-fsd.git
+$ git clone https://github.com/lndbaryshnikov/eslint-plugin-fsd.git
 ```
 
 ### Type checking
