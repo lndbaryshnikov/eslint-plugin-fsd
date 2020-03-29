@@ -1,6 +1,6 @@
 # Eslint plugin for FSD [best practices](https://github.com/fullstack-development/front-end-best-practices)
 
-[![Continuous Integration](https://github.com/timon-and-pumbaa/eslint-plugin-fsd/workflows/CI/badge.svg)](https://github.com/timon-and-pumbaa/eslint-plugin-fsd/actions)
+[![Continuous Integration](https://github.com/lndbaryshnikov/eslint-plugin-fsd/workflows/CI/badge.svg)](https://github.com/lndbaryshnikov/eslint-plugin-fsd/actions)
 
 ## Installation
 

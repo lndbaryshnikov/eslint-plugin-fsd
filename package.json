@@ -7,10 +7,10 @@
     "eslintplugin",
     "eslint-plugin"
   ],
-  "author": "timon-and-pumbaa",
+  "author": "Leonid Baryshnikov",
   "repository": {
     "type": "git",
-    "url": "https://github.com/timon-and-pumbaa/eslint-plugin-fsd.git"
+    "url": "https://github.com/lndbaryshnikov/eslint-plugin-fsd.git"
 },
   "main": "lib/index.js",
   "files": [
