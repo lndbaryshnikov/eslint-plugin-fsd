@@ -62,4 +62,4 @@ You can configure rules in 2 ways:
 - [no-heavy-constructor](docs/rules/no-heavy-constructor.md) - *disallow searching the DOM tree and defining handlers in the constructor*
 - [no-function-declaration-in-event-listener](docs/rules/no-function-declaration-in-event-listener.md) - *enforce moving event handlers to separate functions*
 
-If you want to contribute, check out [README.dev](./README.dev.md).
+If you want to contribute, check out [readme-dev](./readme-dev.md).
