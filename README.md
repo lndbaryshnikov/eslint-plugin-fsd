@@ -55,11 +55,11 @@ You can configure rules in 2 ways:
 
 ## Supported Rules
 
-- [hof-name-prefix](docs/rules/hof-name-prefix.md) - *enforce `make` prefix in higher order function names*
-- [jq-use-js-prefix-in-selector](docs/rules/jq-use-js-prefix-in-selector.md) - *enforce `js-` prefix in classes that are used to search the DOM*
-- [jq-cache-dom-elements](docs/rules/jq-cache-dom-elements.md) - *enforce caching of all found DOM elements*
-- [split-conditionals](docs/rules/split-conditionals.md) - *disallow complex conditions*
-- [no-heavy-constructor](docs/rules/no-heavy-constructor.md) - *disallow searching the DOM tree and defining handlers in the constructor*
-- [no-function-declaration-in-event-listener](docs/rules/no-function-declaration-in-event-listener.md) - *enforce moving event handlers to separate functions*
+- [hof-name-prefix](https://github.com/lndbaryshnikov/eslint-plugin-fsd/blob/master/docs/rules/hof-name-prefix.md) - *enforce `make` prefix in higher order function names*
+- [jq-use-js-prefix-in-selector](https://github.com/lndbaryshnikov/eslint-plugin-fsd/blob/master/docs/rules/jq-use-js-prefix-in-selector.md) - *enforce `js-` prefix in classes that are used to search the DOM*
+- [jq-cache-dom-elements](https://github.com/lndbaryshnikov/eslint-plugin-fsd/blob/master/docs/rules/jq-cache-dom-elements.md) - *enforce caching of all found DOM elements*
+- [split-conditionals](https://github.com/lndbaryshnikov/eslint-plugin-fsd/blob/master/docs/rules/split-conditionals.md) - *disallow complex conditions*
+- [no-heavy-constructor](https://github.com/lndbaryshnikov/eslint-plugin-fsd/blob/master/docs/rules/no-heavy-constructor.md) - *disallow searching the DOM tree and defining handlers in the constructor*
+- [no-function-declaration-in-event-listener](https://github.com/lndbaryshnikov/eslint-plugin-fsd/blob/master/docs/rules/no-function-declaration-in-event-listener.md) - *enforce moving event handlers to separate functions*
 
-If you want to contribute, check out [readme-dev](./readme-dev.md).
+If you want to contribute, check out [readme-dev](https://github.com/lndbaryshnikov/eslint-plugin-fsd/blob/master/readme-dev.md).
