@@ -4,7 +4,7 @@ This rule prohibits the creation of anonymous functions right in the same place 
 
 ## Rule Details
 
-Rule number **11** from the FSD [front-end-best-practices/goodPractice](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/goodPractice.md)
+Rule number **1.13** from the FSD [front-end-best-practices/JS](https://github.com/fullstack-development/front-end-best-practices/blob/master/JS/README.md#1.13)
 
 Examples of **incorrect** code for this rule:
 
